@@ -61,6 +61,7 @@ export default function Game() {
 
       if (currentPlayer) utils.player.get.setData(undefined, currentPlayer);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
   if (gameQuery.isLoading || playerQuery.isLoading)
