@@ -8,7 +8,6 @@ import { redis } from '~/utils/redis';
 
 const router = Router();
 
- 
 router.get('/game/:gameId/subscribe', async (req, res) => {
   const { gameId } = req.params;
 
@@ -52,9 +51,8 @@ router.get('/game/:gameId/subscribe', async (req, res) => {
     await subscriber.quit();
   };
 
-   
   req.on('close', closeHandler);
-   
+
   req.on('end', closeHandler);
 });
 
