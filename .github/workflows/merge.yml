@@ -1,0 +1,28 @@
+name: ⚡️ Pre-merge
+on: [pull_request]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  lint:
+    name: 🪄 Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🔬 ESLint
+        run: yarn lint
+
+      - name: 💄 Prettier
+        run: yarn format:check
