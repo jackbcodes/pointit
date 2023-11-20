@@ -58,7 +58,7 @@ export function JoinGameModal({ name, isSpectator }: JoinGameModalProps) {
         message:
           error instanceof TRPCClientError
             ? error.message
-            : 'There was an error joining the game, please try again.',
+            : 'There was an error joining the game, please try again',
       });
     }
   };

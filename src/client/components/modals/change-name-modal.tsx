@@ -11,6 +11,8 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
@@ -36,12 +38,18 @@ export function ChangeNameModal({ isOpen, onClose }: ChangeNameModalProps) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    // TODO: Handle errors
-    await changeName.mutateAsync(data.name);
-    onClose();
+    try {
+      await changeName.mutateAsync(data.name);
+      onClose();
+    } catch {
+      setError('root.serverError', {
+        message: 'There was an unexpected error, please try again',
+      });
+    }
   };
 
   return (
@@ -72,6 +80,12 @@ export function ChangeNameModal({ isOpen, onClose }: ChangeNameModalProps) {
                 })}
               />
               <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+              {!!errors.root?.serverError && (
+                <Alert status="error" mt="4">
+                  <AlertIcon />
+                  {errors.root.serverError.message}
+                </Alert>
+              )}
             </ModalBody>
             <ModalFooter>
               <Button

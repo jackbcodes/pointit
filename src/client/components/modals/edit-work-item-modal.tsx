@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Button,
   FormControl,
   FormErrorMessage,
@@ -40,16 +42,20 @@ export function EditWorkItemModal({ isOpen, onClose }: EditWorkItemModalProps) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    // TODO: Handle error
-    await add.mutateAsync(data);
-    reset();
-    onClose();
+    try {
+      await add.mutateAsync(data);
+      reset();
+      onClose();
+    } catch {
+      setError('root.serverError', {
+        message: 'There was an unexpected error, please try again',
+      });
+    }
   };
-
-  //   if (!router.isReady) return null;
 
   return (
     <Modal
@@ -107,6 +113,12 @@ export function EditWorkItemModal({ isOpen, onClose }: EditWorkItemModalProps) {
                 <Input id="medium" size="md" {...register('link')} />
                 <FormErrorMessage>{errors.link?.message}</FormErrorMessage>
               </FormControl>
+              {!!errors.root?.serverError && (
+                <Alert status="error">
+                  <AlertIcon />
+                  {errors.root.serverError.message}
+                </Alert>
+              )}
             </VStack>
           </ModalBody>
 
