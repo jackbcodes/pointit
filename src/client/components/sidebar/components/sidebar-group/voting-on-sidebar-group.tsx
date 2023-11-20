@@ -22,7 +22,7 @@ import { api } from '~/utils/api';
 
 import { SidebarGroup } from './sidebar-group';
 
-export const VotingOnSidebarGroup = () => {
+export function VotingOnSidebarGroup() {
   const game = useGame();
 
   const remove = api.workItem.remove.useMutation();
@@ -103,4 +103,4 @@ export const VotingOnSidebarGroup = () => {
       />
     </SidebarGroup>
   );
-};
+}

@@ -11,28 +11,30 @@ export type VotingSystemRadioCardsProps = Pick<
   defaultValue?: DefaultVotingSystemName;
 };
 
-export const VotingSystemRadioCards = ({
+export function VotingSystemRadioCards({
   defaultValue,
   onChange,
   name,
   value,
-}: VotingSystemRadioCardsProps) => (
-  <RadioCardGroup
-    defaultValue={defaultValue}
-    spacing="3"
-    onChange={onChange}
-    name={name}
-    value={value}
-  >
-    {Object.entries(DEFAULT_VOTING_SYSTEMS).map(([name, values]) => (
-      <RadioCard key={name} value={name}>
-        <Text color="emphasized" fontWeight="medium" fontSize="sm">
-          {name}
-        </Text>
-        <Text color="muted" fontSize="sm">
-          {values.join(', ')}
-        </Text>
-      </RadioCard>
-    ))}
-  </RadioCardGroup>
-);
+}: VotingSystemRadioCardsProps) {
+  return (
+    <RadioCardGroup
+      defaultValue={defaultValue}
+      spacing="3"
+      onChange={onChange}
+      name={name}
+      value={value}
+    >
+      {Object.entries(DEFAULT_VOTING_SYSTEMS).map(([name, values]) => (
+        <RadioCard key={name} value={name}>
+          <Text color="emphasized" fontWeight="medium" fontSize="sm">
+            {name}
+          </Text>
+          <Text color="muted" fontSize="sm">
+            {values.join(', ')}
+          </Text>
+        </RadioCard>
+      ))}
+    </RadioCardGroup>
+  );
+}

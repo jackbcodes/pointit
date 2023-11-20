@@ -21,10 +21,10 @@ interface SeeFullDetailsWorkItemModalProps {
   onClose: () => void;
 }
 
-export const SeeFullDetailsWorkItemModal = ({
+export function SeeFullDetailsWorkItemModal({
   isOpen,
   onClose,
-}: SeeFullDetailsWorkItemModalProps) => {
+}: SeeFullDetailsWorkItemModalProps) {
   const game = useGame();
 
   return (
@@ -64,4 +64,4 @@ export const SeeFullDetailsWorkItemModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}

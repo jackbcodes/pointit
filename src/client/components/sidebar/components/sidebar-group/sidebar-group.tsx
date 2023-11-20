@@ -8,7 +8,7 @@ interface SidebarGroupProps {
 
 // 38px min height is hard-coded to match the height of a sm button + 2px padding (stops jumpyness)
 
-export const SidebarGroup = (props: SidebarGroupProps) => {
+export function SidebarGroup(props: SidebarGroupProps) {
   return (
     <Box>
       <HStack mb="3">
@@ -29,4 +29,4 @@ export const SidebarGroup = (props: SidebarGroupProps) => {
       {props.children}
     </Box>
   );
-};
+}

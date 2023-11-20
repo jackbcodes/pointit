@@ -30,10 +30,7 @@ interface EditWorkItemModalProps {
   onClose: () => void;
 }
 
-export const EditWorkItemModal = ({
-  isOpen,
-  onClose,
-}: EditWorkItemModalProps) => {
+export function EditWorkItemModal({ isOpen, onClose }: EditWorkItemModalProps) {
   const game = useGame();
 
   const add = api.workItem.add.useMutation();
@@ -122,4 +119,4 @@ export const EditWorkItemModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}

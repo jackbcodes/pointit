@@ -6,7 +6,7 @@ import { usePlayer } from '~/hooks/use-player';
 import { api } from '~/utils/api';
 import { getSuitFromCardIndex } from '~/utils/get-suit-from-card-index';
 
-export const PointPicker = () => {
+export function VotePicker() {
   const game = useGame();
   const player = usePlayer();
 
@@ -43,4 +43,4 @@ export const PointPicker = () => {
       </SimpleGrid>
     </VStack>
   );
-};
+}

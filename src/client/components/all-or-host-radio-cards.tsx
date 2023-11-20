@@ -11,34 +11,36 @@ export type AllOrHostRadioCardsProps = Pick<
   defaultValue: 'all' | 'host';
 };
 
-export const AllOrHostRadioCards = ({
+export function AllOrHostRadioCards({
   defaultValue,
   onChange,
   name,
   value,
-}: AllOrHostRadioCardsProps) => (
-  <RadioCardGroup
-    defaultValue={defaultValue}
-    spacing="3"
-    onChange={onChange}
-    name={name}
-    value={value}
-  >
-    <RadioCard value="all">
-      <Stack direction="row">
-        <Icon as={Users} color="muted" />
-        <Text color="emphasized" fontWeight="medium" fontSize="sm">
-          All players
-        </Text>
-      </Stack>
-    </RadioCard>
-    <RadioCard value="host">
-      <Stack direction="row">
-        <Icon as={User} color="muted" />
-        <Text color="emphasized" fontWeight="medium" fontSize="sm">
-          Host only
-        </Text>
-      </Stack>
-    </RadioCard>
-  </RadioCardGroup>
-);
+}: AllOrHostRadioCardsProps) {
+  return (
+    <RadioCardGroup
+      defaultValue={defaultValue}
+      spacing="3"
+      onChange={onChange}
+      name={name}
+      value={value}
+    >
+      <RadioCard value="all">
+        <Stack direction="row">
+          <Icon as={Users} color="muted" />
+          <Text color="emphasized" fontWeight="medium" fontSize="sm">
+            All players
+          </Text>
+        </Stack>
+      </RadioCard>
+      <RadioCard value="host">
+        <Stack direction="row">
+          <Icon as={User} color="muted" />
+          <Text color="emphasized" fontWeight="medium" fontSize="sm">
+            Host only
+          </Text>
+        </Stack>
+      </RadioCard>
+    </RadioCardGroup>
+  );
+}

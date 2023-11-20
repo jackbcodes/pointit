@@ -1,6 +1,6 @@
 export type CardSuits = 'spade' | 'heart' | 'diamond' | 'club';
 
-export const getSuitFromCardIndex = (i: number) => {
+export function getSuitFromCardIndex(i: number) {
   const remainderToSuitMap: Record<number, CardSuits> = {
     0: 'spade',
     1: 'heart',
@@ -9,4 +9,4 @@ export const getSuitFromCardIndex = (i: number) => {
   };
 
   return remainderToSuitMap[i % 4];
-};
+}

@@ -17,7 +17,7 @@ import { SidebarButton } from './components/sidebar-button';
 import { SpectatorsSidebarGroup } from './components/sidebar-group/spectators-sidebar-group';
 import { VotingOnSidebarGroup } from './components/sidebar-group/voting-on-sidebar-group';
 
-export const Sidebar = () => {
+export function Sidebar() {
   const navigate = useNavigate();
   const game = useGame();
   const player = usePlayer();
@@ -113,4 +113,4 @@ export const Sidebar = () => {
       />
     </>
   );
-};
+}

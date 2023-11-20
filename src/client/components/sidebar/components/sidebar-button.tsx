@@ -8,7 +8,7 @@ interface SidebarButtonProps extends ButtonProps {
   children?: ReactNode;
 }
 
-export const SidebarButton = (props: SidebarButtonProps) => {
+export function SidebarButton(props: SidebarButtonProps) {
   const { icon, label, children, ...buttonProps } = props;
   return (
     <Button
@@ -25,4 +25,4 @@ export const SidebarButton = (props: SidebarButtonProps) => {
       {children}
     </Button>
   );
-};
+}

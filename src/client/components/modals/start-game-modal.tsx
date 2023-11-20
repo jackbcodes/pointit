@@ -33,7 +33,7 @@ interface StartGameModalProps {
   onClose: () => void;
 }
 
-export const StartGameModal = ({ isOpen, onClose }: StartGameModalProps) => {
+export function StartGameModal({ isOpen, onClose }: StartGameModalProps) {
   const playerQuery = api.player.get.useQuery();
   const createGame = api.game.create.useMutation();
 
@@ -147,4 +147,4 @@ export const StartGameModal = ({ isOpen, onClose }: StartGameModalProps) => {
       </ModalContent>
     </Modal>
   );
-};
+}

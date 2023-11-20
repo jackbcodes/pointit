@@ -2,7 +2,7 @@ import { Icon, useColorModeValue, chakra } from '@chakra-ui/react';
 
 import { useBackgroundColor } from '~/hooks/use-background-color';
 
-export const TopWaves = () => {
+export function TopWaves() {
   const backgroundColor = useBackgroundColor('surface');
   const secondWaveColor = useColorModeValue('#C9DCCD', '#738D8C');
   const thirdWaveColor = useColorModeValue('#E0EBE3', '#404F59');
@@ -29,4 +29,4 @@ export const TopWaves = () => {
       />
     </Icon>
   );
-};
+}

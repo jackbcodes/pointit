@@ -13,7 +13,7 @@ export const signJwt = (payload: JwtPayload) => signer(payload);
 
 export const verifyJwt = (token: string) => verifier(token);
 
-export const authenticate = async (req: Request) => {
+export async function authenticate(req: Request) {
   const cookie = req.cookies[AUTH_COOKIE_NAME];
   if (!cookie) return;
 
@@ -21,9 +21,9 @@ export const authenticate = async (req: Request) => {
   if (!payload) return;
 
   return { id: payload.id as unknown as string };
-};
+}
 
-export const setAuthCookie = (playerId: string, res: Response) => {
+export function setAuthCookie(playerId: string, res: Response) {
   const token = signJwt({ id: playerId });
   res.cookie(AUTH_COOKIE_NAME, token, {
     secure: true,
@@ -31,4 +31,4 @@ export const setAuthCookie = (playerId: string, res: Response) => {
     sameSite: 'strict',
     maxAge: 60 * 60 * 24 * 120,
   });
-};
+}

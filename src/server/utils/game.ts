@@ -12,11 +12,11 @@ interface CreateGameArgs {
   votingSystem: VotingSystem;
 }
 
-export const createGame = async ({
+export async function createGame({
   game,
   player,
   votingSystem,
-}: CreateGameArgs) => {
+}: CreateGameArgs) {
   try {
     await redis
       .multi()
@@ -29,14 +29,14 @@ export const createGame = async ({
     console.log(error);
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
   }
-};
+}
 
 interface JoinGameArgs {
   gameId: string;
   player: Player;
 }
 
-export const joinGame = async ({ gameId, player }: JoinGameArgs) => {
+export async function joinGame({ gameId, player }: JoinGameArgs) {
   try {
     await redis
       .multi()
@@ -49,10 +49,10 @@ export const joinGame = async ({ gameId, player }: JoinGameArgs) => {
     console.log(error);
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
   }
-};
+}
 
 // Returns all game details including players and voting system
-export const getFullGameById = async (id: string) => {
+export async function getFullGameById(id: string) {
   const exists = Boolean(await redis.exists(`game:${id}`));
 
   if (!exists) throw new TRPCError({ code: 'NOT_FOUND' });
@@ -81,9 +81,9 @@ export const getFullGameById = async (id: string) => {
   }
 
   return result.data;
-};
+}
 
-export const getGameById = async (id: string) => {
+export async function getGameById(id: string) {
   const exists = Boolean(await redis.exists(`game:${id}`));
   if (!exists) throw new TRPCError({ code: 'NOT_FOUND' });
 
@@ -93,10 +93,10 @@ export const getGameById = async (id: string) => {
   if (!result.success) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
 
   return result.data;
-};
+}
 
-export const publishUpdatedGame = async (gameId: string) => {
+export async function publishUpdatedGame(gameId: string) {
   const game = await getGameById(gameId);
 
   await redis.publish(`game:${gameId}`, JSON.stringify(game));
-};
+}

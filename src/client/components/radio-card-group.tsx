@@ -28,9 +28,9 @@ interface RadioCardGroupProps<T> extends Omit<StackProps, 'onChange'> {
   onChange?: (value: T) => void;
 }
 
-export const RadioCardGroup = <T extends string>(
+export function RadioCardGroup<T extends string>(
   props: RadioCardGroupProps<T>,
-) => {
+) {
   const { children, name, defaultValue, value, onChange, ...rest } = props;
   const { getRootProps, getRadioProps } = useRadioGroup({
     name,
@@ -55,14 +55,14 @@ export const RadioCardGroup = <T extends string>(
   );
 
   return <Stack {...getRootProps(rest)}>{cards}</Stack>;
-};
+}
 
 interface RadioCardProps extends BoxProps {
   value: string;
   radioProps?: UseRadioProps;
 }
 
-export const RadioCard = (props: RadioCardProps) => {
+export function RadioCard(props: RadioCardProps) {
   const { radioProps, children, ...rest } = props;
   const { getInputProps, getCheckboxProps, getLabelProps, state } =
     useRadio(radioProps);
@@ -99,7 +99,7 @@ export const RadioCard = (props: RadioCardProps) => {
       </Box>
     </Box>
   );
-};
+}
 
 export const CheckIcon = createIcon({
   displayName: 'CheckIcon',

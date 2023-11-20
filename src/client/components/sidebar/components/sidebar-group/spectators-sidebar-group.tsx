@@ -16,7 +16,7 @@ import { useGame } from '~/hooks/use-game';
 
 import { SidebarGroup } from './sidebar-group';
 
-export const SpectatorsSidebarGroup = () => {
+export function SpectatorsSidebarGroup() {
   const game = useGame();
 
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
@@ -64,4 +64,4 @@ export const SpectatorsSidebarGroup = () => {
       </Collapse>
     </SidebarGroup>
   );
-};
+}

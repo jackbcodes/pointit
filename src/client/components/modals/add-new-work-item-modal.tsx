@@ -29,10 +29,10 @@ interface AddNewWorkItemModalProps {
   onClose: () => void;
 }
 
-export const AddNewWorkItemModal = ({
+export function AddNewWorkItemModal({
   isOpen,
   onClose,
-}: AddNewWorkItemModalProps) => {
+}: AddNewWorkItemModalProps) {
   const add = api.workItem.add.useMutation();
 
   const {
@@ -109,4 +109,4 @@ export const AddNewWorkItemModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}

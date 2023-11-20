@@ -4,7 +4,7 @@ interface ChairIconProps {
   isReady: boolean;
 }
 
-export const ChairIcon = ({ isReady }: ChairIconProps) => {
+export function ChairIcon({ isReady }: ChairIconProps) {
   const notReadyColor = useColorModeValue('gray.300', 'gray.500');
   return (
     <>
@@ -42,4 +42,4 @@ export const ChairIcon = ({ isReady }: ChairIconProps) => {
       </Show>
     </>
   );
-};
+}

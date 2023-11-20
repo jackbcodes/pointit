@@ -22,13 +22,13 @@ interface ConfirmActionModalProps {
   };
 }
 
-export const ConfirmActionModal = ({
+export function ConfirmActionModal({
   title,
   text,
   button,
   isOpen,
   onClose,
-}: ConfirmActionModalProps) => {
+}: ConfirmActionModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -54,4 +54,4 @@ export const ConfirmActionModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}

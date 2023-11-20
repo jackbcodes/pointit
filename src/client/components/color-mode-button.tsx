@@ -1,7 +1,7 @@
 import { Icon, IconButton, useColorMode } from '@chakra-ui/react';
 import { Moon, Sun } from 'lucide-react';
 
-export const ColorModeButton = () => {
+export function ColorModeButton() {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -13,4 +13,4 @@ export const ColorModeButton = () => {
       icon={<Icon as={colorMode === 'light' ? Moon : Sun} />}
     />
   );
-};
+}

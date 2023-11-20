@@ -2,7 +2,7 @@ import { Icon, useColorModeValue } from '@chakra-ui/react';
 
 // TODO: Minify SVGs - https://jakearchibald.github.io/svgomg/
 
-export const Logo = () => {
+export function Logo() {
   const color = useColorModeValue('gray.800', 'white');
   return (
     <Icon color={color} viewBox="0 0 167 50" width="auto" height="40px">
@@ -44,4 +44,4 @@ export const Logo = () => {
       />
     </Icon>
   );
-};
+}

@@ -13,9 +13,10 @@ import { useParams } from 'react-router-dom';
 import { ColorModeButton } from '~/components/color-mode-button';
 import { LoadingGameSpinner } from '~/components/loading-game-spinner';
 import { JoinGameModal } from '~/components/modals/join-game-modal';
-import { PointPicker } from '~/components/point-picker';
+import { ResultsSummary } from '~/components/results-summary';
 import { Sidebar } from '~/components/sidebar';
 import { Table } from '~/components/table';
+import { VotePicker } from '~/components/vote-picker';
 import { useBackgroundColor } from '~/hooks/use-background-color';
 import { api } from '~/utils/api';
 
@@ -120,9 +121,9 @@ export default function Game() {
               </Stack>
               <Stack align="center">
                 {gameQuery.data.isRevealed ? (
-                  <p>ResultsSummary</p>
+                  <ResultsSummary />
                 ) : (
-                  <PointPicker />
+                  <VotePicker />
                 )}
               </Stack>
             </Stack>

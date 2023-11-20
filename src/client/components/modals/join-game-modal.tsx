@@ -33,7 +33,7 @@ interface JoinGameModalProps {
   isSpectator?: boolean;
 }
 
-export const JoinGameModal = ({ name, isSpectator }: JoinGameModalProps) => {
+export function JoinGameModal({ name, isSpectator }: JoinGameModalProps) {
   const [isOpen, setIsOpen] = useState(true);
   const { gameId } = useParams();
 
@@ -116,4 +116,4 @@ export const JoinGameModal = ({ name, isSpectator }: JoinGameModalProps) => {
       </ModalContent>
     </Modal>
   );
-};
+}
