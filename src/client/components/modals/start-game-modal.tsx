@@ -15,6 +15,7 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
+import { TRPCClientError } from '@trpc/client';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,9 +61,12 @@ export function StartGameModal({ isOpen, onClose }: StartGameModalProps) {
 
       onClose();
       navigate(`/game/${gameId}`);
-    } catch {
+    } catch (error) {
       setError('root.serverError', {
-        message: 'There was an error starting the game',
+        message:
+          error instanceof TRPCClientError
+            ? error.message
+            : 'There was an error joining the game, please try again.',
       });
     }
   };

@@ -43,8 +43,6 @@ export function Table() {
   `,
   });
 
-  // TODO: Max 16 players on server
-
   const voters = useMemo(
     () => game.players.filter((player) => !player.isSpectator),
     [game.players],

@@ -18,6 +18,7 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
+import { TRPCClientError } from '@trpc/client';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
@@ -52,9 +53,12 @@ export function JoinGameModal({ name, isSpectator }: JoinGameModalProps) {
       await joinGame.mutateAsync({ gameId: gameId!, ...formData });
       await utils.invalidate();
       setIsOpen(false);
-    } catch {
+    } catch (error) {
       setError('root.serverError', {
-        message: 'There was an error joining the game, please try again.',
+        message:
+          error instanceof TRPCClientError
+            ? error.message
+            : 'There was an error joining the game, please try again.',
       });
     }
   };

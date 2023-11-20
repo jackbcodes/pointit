@@ -62,6 +62,15 @@ export const gameRouter = createTRPCRouter({
 
       if (!jwtPayload?.id) setAuthCookie(playerId, ctx.res);
 
+      const playerCount = await redis.scard(`players:${input.gameId}`);
+
+      if (playerCount >= 1)
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message:
+            'The maximum number of players has been reached. No more players can join at the moment.',
+        });
+
       await joinGame({
         gameId: input.gameId,
         player: {
