@@ -64,7 +64,7 @@ export const gameRouter = createTRPCRouter({
 
       const playerCount = await redis.scard(`players:${input.gameId}`);
 
-      if (playerCount >= 1)
+      if (playerCount >= 16)
         throw new TRPCError({
           code: 'FORBIDDEN',
           message:
