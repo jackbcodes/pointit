@@ -44,11 +44,11 @@ export default function Game() {
 
     const evtSource = new EventSource(`/api/game/${gameId}/subscribe`);
 
-    evtSource.addEventListener('subscribed', async (event) => {
+    const handleSubscribed = async (event: MessageEvent) => {
       utils.game.getById.setData(gameId!, JSON.parse(event.data));
-    });
+    };
 
-    evtSource.addEventListener('message', async (event) => {
+    const handleMessage = async (event: MessageEvent) => {
       const data = JSON.parse(event.data);
 
       utils.game.getById.setData(gameId!, (prevData) => ({
@@ -61,7 +61,16 @@ export default function Game() {
       );
 
       if (currentPlayer) utils.player.get.setData(undefined, currentPlayer);
-    });
+    };
+
+    evtSource.addEventListener('subscribed', handleSubscribed);
+    evtSource.addEventListener('message', handleMessage);
+
+    return () => {
+      evtSource.removeEventListener('subscribed', handleSubscribed);
+      evtSource.removeEventListener('message', handleMessage);
+      evtSource.close();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
