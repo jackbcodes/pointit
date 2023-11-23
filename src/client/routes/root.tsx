@@ -39,6 +39,7 @@ export default function Root() {
       h="100vh"
       overflow="clip"
     >
+      <h1 className="p-3 text-3xl font-bold underline">Hello world!</h1>
       <StartGameModal
         isOpen={isStartGameModalOpen}
         onClose={() => setIsStartGameModalOpen(false)}
