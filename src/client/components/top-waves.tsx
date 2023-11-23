@@ -9,7 +9,13 @@ export function TopWaves() {
   const lastWaveColor = useBackgroundColor('canvas');
 
   return (
-    <Icon viewBox="0 0 1440 274" fill="none" width="full" height="auto">
+    <Icon
+      viewBox="0 0 1440 274"
+      fill="none"
+      width="full"
+      height="auto"
+      zIndex="-100"
+    >
       <chakra.path fill={backgroundColor} d="M0 0h1440v274H0z" />
       <chakra.path
         fill="#B2CEB9"

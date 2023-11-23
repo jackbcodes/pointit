@@ -4,7 +4,7 @@ import { BigCard } from '~/components/big-card';
 import { useGame } from '~/hooks/use-game';
 import { usePlayer } from '~/hooks/use-player';
 import { api } from '~/utils/api';
-import { getSuitFromCardIndex } from '~/utils/get-suit-from-card-index';
+import { getSuitFromCardIndex } from '~/utils/misc';
 
 export function VotePicker() {
   const game = useGame();

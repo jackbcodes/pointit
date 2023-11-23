@@ -37,6 +37,10 @@ export default function Game() {
 
   useEffect(() => {
     if (gameQuery.data) document.title = `${gameQuery.data.name} | PointIt`;
+
+    return () => {
+      document.title = 'PointIt';
+    };
   }, [gameQuery.data]);
 
   useEffect(() => {

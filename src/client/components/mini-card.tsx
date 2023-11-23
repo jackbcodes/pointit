@@ -1,7 +1,7 @@
 import { Flex, Show, Text, useBreakpointValue } from '@chakra-ui/react';
 
 import { SuitIcon } from '~/components/suit-icon';
-import { CardSuits } from '~/utils/get-suit-from-card-index';
+import { CardSuits } from '~/utils/misc';
 
 export interface MiniCardProps {
   points: string;

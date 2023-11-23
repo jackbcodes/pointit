@@ -3,7 +3,7 @@ import { Box, Flex, FlexboxProps, useBreakpointValue } from '@chakra-ui/react';
 import { ChairIcon } from '~/components/chair-icon';
 import { MiniCard } from '~/components/mini-card';
 import { useGame } from '~/hooks/use-game';
-import { getSuitFromCardIndex } from '~/utils/get-suit-from-card-index';
+import { getSuitFromCardIndex } from '~/utils/misc';
 
 interface CardPositionType {
   marginTop?: string;

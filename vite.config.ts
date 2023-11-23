@@ -7,11 +7,8 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: [
-      {
-        find: '~',
-        replacement: fileURLToPath(new URL('src/client', import.meta.url)),
-      },
-    ],
+    alias: {
+      '~': fileURLToPath(new URL('src/client', import.meta.url)),
+    },
   },
 });

@@ -1,117 +1,78 @@
-import { useEffect, useState } from 'react';
-
-import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Flex,
-  HStack,
-  Heading,
-  Image,
-  Text,
-  useBreakpointValue,
-  useColorModeValue,
-} from '@chakra-ui/react';
-
-import { ColorModeButton } from '~/components/color-mode-button';
-import { Logo } from '~/components/logo';
-import { StartGameModal } from '~/components/modals/start-game-modal';
-import { TopWaves } from '~/components/top-waves';
+import { ColorModeToggle } from '~/components/color-mode-toggle';
+import { Icons } from '~/components/icons';
+import { StartGameDialog } from '~/components/start-game-dialog';
+import { buttonVariants } from '~/components/ui/button';
+import { useIsScrolled } from '~/hooks/use-is-scrolled';
+import { cn } from '~/utils/misc';
 
 export default function Root() {
-  const [isStartGameModalOpen, setIsStartGameModalOpen] = useState(false);
-  const backgroundColor = useColorModeValue('white', 'gray.900');
-  const imgSrc = useColorModeValue(
-    '/assets/game-screenshot-light.png',
-    '/assets/game-screenshot-dark.png',
-  );
-
-  useEffect(() => {
-    document.title = 'PointIt';
-  }, []);
+  const isScrolled = useIsScrolled();
 
   return (
-    <Flex
-      direction="column"
-      flex="1"
-      bg={backgroundColor}
-      h="100vh"
-      overflow="clip"
-    >
-      <h1 className="p-3 text-3xl font-bold underline">Hello world!</h1>
-      <StartGameModal
-        isOpen={isStartGameModalOpen}
-        onClose={() => setIsStartGameModalOpen(false)}
-      />
-      <Container py="4">
-        <HStack spacing="10" justify="space-between">
-          <Logo />
-          <ColorModeButton />
-        </HStack>
-      </Container>
-      <Box as="section" pt={{ base: '0', md: '16' }} overflow="hidden">
-        <Box
-          maxW={{ base: 'xl', md: '7xl' }}
-          mx="auto"
-          px={{ base: '6', md: '8' }}
-        >
-          <Flex
-            align="flex-start"
-            direction={{ base: 'column', lg: 'row' }}
-            justify="space-between"
-            mb="20"
-          >
-            <Box flex="1" maxW={{ lg: '2xl' }} pt="6">
-              <Badge
-                colorScheme="green"
-                mt="4"
-                alignSelf="start"
-                size={useBreakpointValue({ base: 'md', md: 'lg' })}
-              >
-                Unlimited free usage
-              </Badge>
-              <Heading as="h1" size="3xl" mt="8" fontWeight="extrabold">
-                Who says you can&apos;t play card games at work?
-              </Heading>
-              <Text
-                fontSize={{ base: 'lg', md: 'xl' }}
-                color="muted"
-                mt="10"
-                maxW={{ base: 'full', md: 'lg' }}
-              >
-                Re-energise your agile ceremonies with a fun, user-friendly
-                platform for real-time planning poker.
-              </Text>
-              <Button
-                mt="10"
-                minW={{ base: 'full', md: '12rem' }}
-                size="lg"
-                height="14"
-                px="8"
-                variant="primary"
-                borderRadius="lg"
-                onClick={() => setIsStartGameModalOpen(true)}
-              >
-                Start game
-              </Button>
-            </Box>
-            <Image
-              mt={{ base: 14, lg: 0 }}
-              pos="relative"
-              marginEnd="-20rem"
-              w="50rem"
-              src={imgSrc}
-              alt="Screenshot for Form builder"
-              boxShadow="xl"
-              bgColor="transparent"
-              borderRadius="md"
-            />
-          </Flex>
-          <Box></Box>
-        </Box>
-      </Box>
-      <TopWaves />
-    </Flex>
+    <div className="flex min-h-screen flex-col">
+      <header
+        className={cn(
+          'sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
+          isScrolled && 'border-border border-b',
+        )}
+      >
+        <div className="container flex items-center justify-between py-4">
+          <Icons.logo className="h-9" />
+          <div className="flex items-center space-x-2">
+            <a
+              href="https:google.com"
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({
+                variant: 'ghost',
+                size: 'icon',
+              })}
+            >
+              <Icons.gitHub className="h-5 w-5" />
+              <span className="sr-only">GitHub</span>
+            </a>
+            <ColorModeToggle />
+          </div>
+        </div>
+      </header>
+
+      <section className="flex-1 overflow-x-hidden md:mt-8 lg:mt-10">
+        <div className="container flex flex-col gap-8 lg:flex-row">
+          <div className="pt-4 lg:pt-10">
+            <span className="me-2 rounded bg-green-100 px-2.5 py-1.5 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
+              Built by developers for developers
+            </span>
+            <h1 className="mb-4 mt-7 max-w-2xl text-3xl font-bold leading-none md:text-5xl xl:text-6xl">
+              Who says you can&apos;t play card games at work?
+            </h1>
+            <p className="mb-8 max-w-md font-light text-muted-foreground md:text-lg lg:mb-8 lg:text-xl">
+              Re-energise your agile ceremonies with a fun, user-friendly
+              platform for real-time planning poker.
+            </p>
+            <StartGameDialog />
+          </div>
+          <img
+            src="/assets/game-screenshot-light.png"
+            className="relative -me-80 mb-16 rounded shadow-xl lg:w-[40rem] xl:w-[50rem]"
+            alt="mockup"
+          />
+        </div>
+      </section>
+
+      <svg viewBox="0 0 900 94" xmlns="http://www.w3.org/2000/svg">
+        <path
+          className="fill-[#F7FAF8] dark:fill-[#788C8C]"
+          d="m0 0 21.5 4.2c21.5 4.1 64.5 12.5 107.3 12.1 42.9-0.3 85.5-9.3 128.4-10.8 42.8-1.5 85.8 4.5 128.6 10.8 42.9 6.4 85.5 13 128.4 14.4 42.8 1.3 85.8-2.7 128.6-7.4 42.9-4.6 85.5-10 128.4-12.5 42.8-2.5 85.8-2.1 107.3-2l21.5 0.20001v85h-21.5-107.3-128.4-128.6-128.4-128.6-128.4-107.3-21.5v-94z"
+        />
+        <path
+          className="fill-[#D4E4D9] dark:fill-[#536369]"
+          d="m0 29 21.5-0.7c21.5-0.6 64.5-2 107.3 2.7 42.9 4.7 85.5 15.3 128.4 18.3 42.8 3 85.8-1.6 128.6-6.1 42.9-4.5 85.5-8.9 128.4-8.2 42.8 0.7 85.8 6.3 128.6 10.8 42.9 4.5 85.5 7.9 128.4 3.9 42.8-4 85.8-15.4 107.3-21l21.5-5.7v71h-21.5-107.3-128.4-128.6-128.4-128.6-128.4-107.3-21.5v-65z"
+        />
+        <path
+          className="fill-[#B2CEB9] dark:fill-[#333D45]"
+          d="m0 70 21.5-1.3c21.5-1.4 64.5-4 107.3-6.2 42.9-2.2 85.5-3.8 128.4-4.5 42.8-0.7 85.8-0.3 128.6 0.5 42.9 0.8 85.5 2.2 128.4 2.7 42.8 0.5 85.8 0.1 128.6 2 42.9 1.8 85.5 5.8 128.4 4.5 42.8-1.4 85.8-8 107.3-11.4l21.5-3.3v41h-21.5-107.3-128.4-128.6-128.4-128.6-128.4-107.3-21.5v-24z"
+        />
+      </svg>
+    </div>
   );
 }

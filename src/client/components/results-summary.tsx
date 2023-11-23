@@ -2,10 +2,9 @@ import { useMemo } from 'react';
 
 import { SimpleGrid, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
 
+import { BigCard } from '~/components/big-card';
 import { useGame } from '~/hooks/use-game';
-import { getSuitFromCardIndex } from '~/utils/get-suit-from-card-index';
-
-import { BigCard } from './big-card';
+import { getSuitFromCardIndex } from '~/utils/misc';
 
 export function ResultsSummary() {
   const game = useGame();
