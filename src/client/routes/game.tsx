@@ -68,8 +68,6 @@ export default function Game() {
   if (gameQuery.isLoading || playerQuery.isLoading)
     return <LoadingGameSpinner />;
 
-  gameQuery.isLoading;
-
   // TODO: handle no game
   // if (!gameQuery.data) {
   //   navigate('/');
