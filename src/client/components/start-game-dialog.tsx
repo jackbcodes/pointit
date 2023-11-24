@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight } from 'lucide-react';
+import { TRPCClientError } from '@trpc/client';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { Button } from '~/components/ui/button';
@@ -14,6 +16,7 @@ import {
 } from '~/components/ui/dialog';
 import { Input } from '~/components/ui/input';
 import { api } from '~/utils/api';
+import { cn } from '~/utils/misc';
 
 import {
   Form,
@@ -23,13 +26,12 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+
+const DEFAULT_VOTING_SYSTEMS = {
+  fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '?', '☕️'],
+  't-shirt': ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '?', '☕️'],
+};
 
 const formSchema = z.object({
   gameName: z.string({
@@ -38,18 +40,19 @@ const formSchema = z.object({
   playerName: z.string({
     required_error: 'Please enter your name',
   }),
-  votingSystemValues: z.array(z.string()),
+  votingSystemName: z.enum(['fibonacci', 't-shirt']),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function StartGameDialog() {
+  const navigate = useNavigate();
   const playerQuery = api.player.get.useQuery();
   const createGame = api.game.create.useMutation();
 
   const defaultValues: Partial<FormValues> = {
     playerName: playerQuery.data?.name,
-    votingSystemValues: ['0', '1', '2', '3', '5', '8', '13', '21', '?', '☕️'],
+    votingSystemName: 'fibonacci',
   };
 
   const form = useForm<FormValues>({
@@ -58,15 +61,26 @@ export function StartGameDialog() {
     mode: 'onChange',
   });
 
-  function onSubmit(data: FormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(formData: FormValues) {
+    try {
+      const gameId = await createGame.mutateAsync({
+        gameName: formData.gameName,
+        playerName: formData.playerName,
+        votingSystem: {
+          name: formData.votingSystemName,
+          values: DEFAULT_VOTING_SYSTEMS[formData.votingSystemName],
+        },
+      });
+
+      navigate(`/game/${gameId}`);
+    } catch (error) {
+      form.setError('root.serverError', {
+        message:
+          error instanceof TRPCClientError
+            ? error.message
+            : 'There was an error joining the game, please try again',
+      });
+    }
   }
 
   return (
@@ -76,7 +90,7 @@ export function StartGameDialog() {
           Start game <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Start game</DialogTitle>
         </DialogHeader>
@@ -95,6 +109,7 @@ export function StartGameDialog() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="playerName"
@@ -108,42 +123,72 @@ export function StartGameDialog() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="votingSystemValues"
+              name="votingSystemName"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-1">
                   <FormLabel>Voting system</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={String(field.value)}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a verified email to display" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="m@example.com">
-                        [ '0', '1', '2', '3', '5', '8', '13', '21', '?', '☕️', ]
-                      </SelectItem>
-                      <SelectItem value="m@google.com">m@google.com</SelectItem>
-                      <SelectItem value="m@support.com">
-                        m@support.com
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
                   <FormMessage />
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <VotingSystemRadioGroupItem
+                      value="fibonacci"
+                      name="Fibonacci"
+                      values="0, 1, 2, 3, 5, 8, 13, 21, 34, ?, ☕️"
+                    />
+                    <VotingSystemRadioGroupItem
+                      value="t-shirt"
+                      name="T-shirt"
+                      values="XXS, XS, S, M, L, XL, XXL, ?, ☕️"
+                    />
+                  </RadioGroup>
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit">Let&apos;s go</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                <Loader2
+                  className={cn(
+                    'mr-2 h-4 w-4 animate-spin hidden',
+                    form.formState.isSubmitting && 'block',
+                  )}
+                />
+                Let&apos;s go
+              </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+interface VotingSystemRadioItemProps {
+  value: string;
+  name: string;
+  values: string;
+}
+
+function VotingSystemRadioGroupItem({
+  value,
+  name,
+  values,
+}: VotingSystemRadioItemProps) {
+  return (
+    <FormItem>
+      <FormLabel className="[&:has([data-state=checked])>div]:border-primary [&:has([data-state=checked])>div]:ring-1 [&:has([data-state=checked])>div]:ring-ring">
+        <FormControl>
+          <RadioGroupItem value={value} className="sr-only" />
+        </FormControl>
+        <div className="space-y-1 rounded-md border border-input p-4 transition-all hover:cursor-pointer">
+          <p className="text-sm font-medium leading-none">{name}</p>
+          <p className="text-sm text-muted-foreground">{values}</p>
+        </div>
+      </FormLabel>
+    </FormItem>
   );
 }
