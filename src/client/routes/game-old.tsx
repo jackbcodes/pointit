@@ -1,7 +1,14 @@
 import { useEffect, useMemo } from 'react';
 
-import { Container, Flex, Heading, Show, Stack } from '@chakra-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import {
+  Container,
+  Flex,
+  Heading,
+  Show,
+  Stack,
+  useBreakpointValue,
+} from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
 
 import { ColorModeButton } from '~/components/color-mode-button';
 import { LoadingGameSpinner } from '~/components/loading-game-spinner';
@@ -10,26 +17,62 @@ import { ResultsSummary } from '~/components/results-summary';
 import { Sidebar } from '~/components/sidebar';
 import { Table } from '~/components/table';
 import { VotePicker } from '~/components/vote-picker';
+import { useBackgroundColor } from '~/hooks/use-background-color';
 import { api } from '~/utils/api';
 
 export default function Game() {
   const { gameId } = useParams();
-  const navigate = useNavigate();
 
   const playerQuery = api.player.get.useQuery();
   const gameQuery = api.game.getById.useQuery(gameId!);
   const utils = api.useUtils();
 
-  const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
-  const isLoading = gameQuery.isLoading || playerQuery.isLoading;
+  const bgColor = useBackgroundColor('canvas');
+  const headingSize = useBreakpointValue({ base: 'xs', lg: 'sm' });
+
+  const isPlayerInGame = useMemo(
+    () => Boolean(gameId === playerQuery.data?.gameId),
+    [playerQuery.data?.gameId, gameId],
+  );
 
   useEffect(() => {
-    if (!isPlayerInGame && !isLoading) return;
-    navigate(`/join/${gameId}`);
+    if (gameQuery.data) document.title = `${gameQuery.data.name} | PointIt`;
+
+    return () => {
+      document.title = 'PointIt';
+    };
+  }, [gameQuery.data]);
+
+  useEffect(() => {
+    if (!isPlayerInGame) return;
+
+    const evtSource = new EventSource(`/api/game/${gameId}/subscribe`);
+
+    evtSource.addEventListener('subscribed', async (event) => {
+      utils.game.getById.setData(gameId!, JSON.parse(event.data));
+    });
+
+    evtSource.addEventListener('message', async (event) => {
+      const data = JSON.parse(event.data);
+
+      utils.game.getById.setData(gameId!, (prevData) => ({
+        ...prevData,
+        ...JSON.parse(event.data),
+      }));
+
+      const currentPlayer = data.players.find(
+        (player) => player.id === playerQuery.data?.id,
+      );
+
+      if (currentPlayer) utils.player.get.setData(undefined, currentPlayer);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
   if (gameQuery.isLoading || playerQuery.isLoading)
     return <LoadingGameSpinner />;
+
+  gameQuery.isLoading;
 
   // TODO: handle no game
   // if (!gameQuery.data) {

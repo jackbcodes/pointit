@@ -3,8 +3,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Game from '~/routes/game';
+import GameOld from '~/routes/game-old';
+import Join from '~/routes/join';
 import Root from '~/routes/root';
-import RootOld from '~/routes/root-old';
 import { theme } from '~/styles/theme';
 import { TRPCProvider, trpcClient } from '~/utils/api';
 
@@ -16,8 +17,12 @@ const router = createBrowserRouter([
     element: <Root />,
   },
   {
-    path: '/old',
-    element: <RootOld />,
+    path: '/game-old/:gameId',
+    element: <GameOld />,
+  },
+  {
+    path: '/join/:gameId',
+    element: <Join />,
   },
   {
     path: '/game/:gameId',

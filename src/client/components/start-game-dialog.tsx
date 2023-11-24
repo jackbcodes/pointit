@@ -58,14 +58,12 @@ export function StartGameDialog() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
-    mode: 'onChange',
   });
 
   async function onSubmit(formData: FormValues) {
     try {
       const gameId = await createGame.mutateAsync({
-        gameName: formData.gameName,
-        playerName: formData.playerName,
+        ...formData,
         votingSystem: {
           name: formData.votingSystemName,
           values: DEFAULT_VOTING_SYSTEMS[formData.votingSystemName],
