@@ -126,7 +126,7 @@ export function StartGameDialog() {
               control={form.control}
               name="votingSystemName"
               render={({ field }) => (
-                <FormItem className="space-y-1">
+                <FormItem>
                   <FormLabel>Voting system</FormLabel>
                   <FormMessage />
                   <RadioGroup

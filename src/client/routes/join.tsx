@@ -88,12 +88,9 @@ export default function Join() {
         </header>
 
         <div className="mx-auto mt-8 space-y-8 md:w-96">
-          <div className="space-y-2 text-center md:space-y-3">
-            <h1 className="text-2xl font-bold md:text-3xl">Join game</h1>
-            <p className="text-muted-foreground">
-              Start making refinement sessions slightly less boring
-            </p>
-          </div>
+          <h1 className="text-center text-2xl font-bold md:text-3xl">
+            Join game
+          </h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
@@ -114,7 +111,7 @@ export default function Join() {
                   control={form.control}
                   name="isSpectator"
                   render={({ field }) => (
-                    <FormItem className="space-y-1">
+                    <FormItem>
                       <FormLabel>Player mode</FormLabel>
                       <FormMessage />
                       <RadioGroup
