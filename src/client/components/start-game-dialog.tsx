@@ -82,7 +82,7 @@ export function StartGameDialog() {
   }
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => form.reset()}>
       <DialogTrigger asChild>
         <Button size="lg">
           Start game <ArrowRight className="ml-2 h-4 w-4" />
