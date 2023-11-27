@@ -28,34 +28,21 @@ import {
 } from './ui/form';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 
-const DEFAULT_VOTING_SYSTEMS = {
-  fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '?', '☕️'],
-  't-shirt': ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '?', '☕️'],
-};
-
 const formSchema = z.object({
-  gameName: z.string({
-    required_error: "Please enter the game's name",
-  }),
-  playerName: z.string({
+  name: z.string({
     required_error: 'Please enter your name',
   }),
-  votingSystemName: z.enum(['fibonacci', 't-shirt']),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface StartGameDialogProps {
-  playerName?: string;
-}
-
-export function StartGameDialog({ playerName }: StartGameDialogProps) {
+export function ChangeNameDialog() {
   const navigate = useNavigate();
-
+  const playerQuery = api.player.get.useQuery();
   const createGame = api.game.create.useMutation();
 
   const defaultValues: Partial<FormValues> = {
-    playerName: playerName ?? '',
+    playerName: playerQuery.data?.name,
     votingSystemName: 'fibonacci',
   };
 

@@ -1,4 +1,3 @@
-import { TRPCError } from '@trpc/server';
 import { Router } from 'express';
 
 import { authenticate } from '~/utils/auth';
@@ -12,16 +11,16 @@ router.get('/game/:gameId/subscribe', async (req, res) => {
   const { gameId } = req.params;
 
   const gameExists = Boolean(await redis.exists(`game:${gameId}`));
-  if (!gameExists) throw new TRPCError({ code: 'NOT_FOUND' });
+  if (!gameExists) return res.status(400).send('NOT_FOUND');
 
   const user = await authenticate(req);
-  if (!user) throw new TRPCError({ code: 'UNAUTHORIZED' });
+  if (!user) return res.status(401).send('UNAUTHORIZED');
 
   const player = await getPlayerById(user.id);
-  if (!player) throw new TRPCError({ code: 'UNAUTHORIZED' });
+  if (!player) return res.status(401).send('UNAUTHORIZED');
 
   const isPlayerInGame = await redis.sismember(`players:${gameId}`, player.id);
-  if (!isPlayerInGame) throw new TRPCError({ code: 'UNAUTHORIZED' });
+  if (!isPlayerInGame) return res.status(401).send('UNAUTHORIZED');
 
   const headers = {
     'Content-Type': 'text/event-stream',

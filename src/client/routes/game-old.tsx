@@ -11,10 +11,10 @@ import {
 import { useParams } from 'react-router-dom';
 
 import { ColorModeButton } from '~/components/color-mode-button';
-import { LoadingGameSpinner } from '~/components/loading-game-spinner';
 import { JoinGameModal } from '~/components/modals/join-game-modal';
 import { ResultsSummary } from '~/components/results-summary';
 import { Sidebar } from '~/components/sidebar';
+import { Spinner } from '~/components/spinner';
 import { Table } from '~/components/table';
 import { VotePicker } from '~/components/vote-picker';
 import { useBackgroundColor } from '~/hooks/use-background-color';
@@ -69,8 +69,7 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
-  if (gameQuery.isLoading || playerQuery.isLoading)
-    return <LoadingGameSpinner />;
+  if (gameQuery.isLoading || playerQuery.isLoading) return <Spinner />;
 
   gameQuery.isLoading;
 

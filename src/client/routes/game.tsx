@@ -1,15 +1,13 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
-import { Container, Flex, Heading, Show, Stack } from '@chakra-ui/react';
+import { PanelLeftOpen } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ColorModeButton } from '~/components/color-mode-button';
-import { LoadingGameSpinner } from '~/components/loading-game-spinner';
-import { JoinGameModal } from '~/components/modals/join-game-modal';
-import { ResultsSummary } from '~/components/results-summary';
+import { RevealButton } from '~/components/reveal-button';
 import { Sidebar } from '~/components/sidebar';
-import { Table } from '~/components/table';
-import { VotePicker } from '~/components/vote-picker';
+import { Spinner } from '~/components/spinner';
+import { Button } from '~/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
 import { api } from '~/utils/api';
 
 export default function Game() {
@@ -21,76 +19,78 @@ export default function Game() {
   const utils = api.useUtils();
 
   const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
-  const isLoading = gameQuery.isLoading || playerQuery.isLoading;
 
   useEffect(() => {
-    if (!isPlayerInGame && !isLoading) return;
-    navigate(`/join/${gameId}`);
-  }, [isPlayerInGame]);
+    if (!isPlayerInGame) return;
 
-  if (gameQuery.isLoading || playerQuery.isLoading)
-    return <LoadingGameSpinner />;
+    const evtSource = new EventSource(`/api/game/${gameId}/subscribe`);
 
-  // TODO: handle no game
-  // if (!gameQuery.data) {
-  //   navigate('/');
-  //   return;
-  // }
+    const handleSubscribed = async (event: MessageEvent) => {
+      utils.game.getById.setData(gameId!, JSON.parse(event.data));
+    };
 
-  if (gameQuery.data) {
-    if (!isPlayerInGame)
-      return (
-        <JoinGameModal
-          name={playerQuery.data?.name}
-          isSpectator={playerQuery.data?.isSpectator}
-        />
+    const handleMessage = async (event: MessageEvent) => {
+      const data = JSON.parse(event.data);
+
+      utils.game.getById.setData(gameId!, (prevData) => ({
+        ...prevData,
+        ...JSON.parse(event.data),
+      }));
+
+      const currentPlayer = data.players.find(
+        (player) => player.id === playerQuery.data?.id,
       );
 
+      if (currentPlayer) utils.player.get.setData(undefined, currentPlayer);
+    };
+
+    evtSource.addEventListener('subscribed', handleSubscribed);
+    evtSource.addEventListener('message', handleMessage);
+
+    return () => {
+      evtSource.removeEventListener('subscribed', handleSubscribed);
+      evtSource.removeEventListener('message', handleMessage);
+      evtSource.close();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlayerInGame]);
+
+  if (gameQuery.data && playerQuery.data) {
+    if (!isPlayerInGame) {
+      navigate(`/join/${gameId}`);
+      return;
+    }
+
     return (
-      <Flex
-        as="section"
-        direction={{ base: 'column', lg: 'row' }}
-        minH="100vh"
-        bgColor={bgColor}
-      >
-        {/* {isDesktop ? <Sidebar /> : <GameNavbar />} */}
-        <Sidebar />
-        <Container py={{ base: 4, md: 8 }} display="flex">
-          <Stack
-            spacing={{ base: 6, lg: 0.5 }}
-            flex={1}
-            justifyContent="space-between"
-          >
-            <Stack direction="row" justify="space-between" align="center">
-              <Heading size={headingSize} fontWeight="medium">
-                {gameQuery.data.name}
-              </Heading>
-              <Stack direction="row">
-                {/* <Menu /> */}
-                <Show above="lg">
-                  <ColorModeButton />
-                </Show>
-              </Stack>
-            </Stack>
-            <Stack
-              justifyContent="space-between"
-              flex={1}
-              spacing={{ base: 6, lg: 0 }}
-            >
-              <Stack align="center">
-                <Table />
-              </Stack>
-              <Stack align="center">
-                {gameQuery.data.isRevealed ? (
-                  <ResultsSummary />
-                ) : (
-                  <VotePicker />
-                )}
-              </Stack>
-            </Stack>
-          </Stack>
-        </Container>
-      </Flex>
+      <div className="bg-background-game">
+        <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background px-4 py-2.5 lg:hidden">
+          <div className="flex items-center justify-between">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <PanelLeftOpen className="h-5 w-5" />
+                  <span className="sr-only">Open sidebar</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <Sidebar />
+              </SheetContent>
+            </Sheet>
+
+            <div className="flex items-center gap-2">
+              <RevealButton size="sm" />
+            </div>
+          </div>
+        </nav>
+
+        <aside className="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-border bg-background px-5 py-6 transition-transform lg:translate-x-0">
+          <Sidebar />
+        </aside>
+
+        <main className="min-h-screen p-4 pt-20 lg:ml-72 lg:pt-6"></main>
+      </div>
     );
   }
+
+  return <Spinner />;
 }

@@ -1,12 +1,18 @@
 import { ColorModeToggle } from '~/components/color-mode-toggle';
 import { Icons } from '~/components/icons';
+import { Spinner } from '~/components/spinner';
 import { StartGameDialog } from '~/components/start-game-dialog';
 import { buttonVariants } from '~/components/ui/button';
 import { useIsScrolled } from '~/hooks/use-is-scrolled';
+import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
 
 export default function Root() {
   const isScrolled = useIsScrolled();
+
+  const playerQuery = api.player.get.useQuery();
+
+  if (playerQuery.isLoading) return <Spinner />;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -49,7 +55,7 @@ export default function Root() {
               Re-energise your agile ceremonies with a fun, user-friendly
               platform for real-time planning poker.
             </p>
-            <StartGameDialog />
+            <StartGameDialog playerName={playerQuery.data?.name} />
           </div>
           <img
             src="/assets/game-screenshot-light.png"
