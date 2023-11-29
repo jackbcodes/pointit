@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RevealButton } from '~/components/reveal-button';
 import { Sidebar } from '~/components/sidebar';
 import { Spinner } from '~/components/spinner';
+import { Table } from '~/components/table';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
 import { api } from '~/utils/api';
@@ -87,9 +88,16 @@ export default function Game() {
           <Sidebar />
         </aside>
 
-        <main className="min-h-screen p-4 pt-20 lg:ml-72 lg:pt-6"></main>
+        <main className="flex min-h-screen flex-col items-center p-4 pt-20 lg:ml-72 lg:pt-6">
+          <Table />
+        </main>
       </div>
     );
+  }
+
+  if (gameQuery.error) {
+    navigate('/');
+    return;
   }
 
   return <Spinner />;

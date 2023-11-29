@@ -1,47 +1,33 @@
 import { useMemo } from 'react';
 
-import {
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  useBreakpointValue,
-} from '@chakra-ui/react';
-
-import { Player } from '~/components/player';
 import { useGame } from '~/hooks/use-game';
+import { cn } from '~/utils/misc';
+
+import { Icons } from './icons';
+
+const POSITIONS = [
+  ['col-start-2', 'row-start-1', 'rotate-0', '-bottom-10'],
+  ['col-start-2', 'row-start-4', 'rotate-180', '-top-10'],
+  ['col-start-3', 'row-start-1', 'rotate-0', '-bottom-10'],
+  ['col-start-3', 'row-start-4', 'rotate-180', '-top-10'],
+  ['col-start-4', 'row-start-1', 'rotate-0', '-bottom-10'],
+  ['col-start-4', 'row-start-4', 'rotate-180', '-top-10'],
+  ['col-start-5', 'row-start-1', 'rotate-0', '-bottom-10'],
+  ['col-start-5', 'row-start-4', 'rotate-180', '-top-10'],
+  ['col-start-1', 'row-start-2', '-rotate-90', '-right-6 top-6'],
+  ['col-start-6', 'row-start-2', 'rotate-90', '-left-6 top-6'],
+  ['col-start-1', 'row-start-3', '-rotate-90', '-right-6'],
+  ['col-start-6', 'row-start-3', 'rotate-90', '-left-6'],
+  ['col-start-1', 'row-start-1', '-rotate-45', 'right-0'],
+  ['col-start-1', 'row-start-4', '-rotate-[135deg]', 'right-0'],
+  ['col-start-6', 'row-start-1', 'rotate-45', 'left-0'],
+  ['col-start-6', 'row-start-4', 'rotate-[135deg]', 'left-0'],
+];
+
+// TODO: Dark mode colours & dynamic card suit
 
 export function Table() {
   const game = useGame();
-
-  const tableSrc = useBreakpointValue({
-    base: '/assets/table-sm.svg',
-    lg: '/assets/table-lg.svg',
-  });
-
-  const gridTemplateColumns = useBreakpointValue({
-    base: '90px 90px 90px 90px',
-    lg: '150px 150px 150px 150px 150px 150px',
-  });
-
-  const gridTemplateRows = useBreakpointValue({
-    base: '72px 72px 72px 72px 72px 72px',
-    lg: '150px 150px 150px 150px',
-  });
-
-  const templateAreas = useBreakpointValue({
-    base: `"player-15 player-7 player-5 player-13"
-    "player-11 table table player-9"
-    "player-3 table table player-1"
-    "player-4 table table player-2"
-    "player-12 table table player-10"
-    "player-16 player-8 player-6 player-14"`,
-    lg: `"player-13 player-9 player-1 player-2 player-10 player-14"
-    "player-5 table table table table player-6"
-    "player-7 table table table table player-8"
-    "player-15 player-11 player-3 player-4 player-12 player-16"
-  `,
-  });
 
   const voters = useMemo(
     () => game.players.filter((player) => !player.isSpectator),
@@ -49,25 +35,49 @@ export function Table() {
   );
 
   return (
-    <Grid
-      gridTemplateColumns={gridTemplateColumns}
-      gridTemplateRows={gridTemplateRows}
-      templateAreas={templateAreas}
-    >
-      {voters.map((player, i) => {
+    <div className="grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-3">
+      <img
+        src="/assets/table.png"
+        className="col-span-4 col-start-2 row-span-2 row-start-2"
+        alt="table"
+      />
+
+      {POSITIONS.map(([colStart, rowStart, chairRotate, cardPosition], i) => {
+        const player = voters[i];
+        if (!player) return;
+
         return (
-          <GridItem area={`player-${i + 1}`} zIndex={1} key={i}>
-            <Flex h="100%" w="100%" alignItems="center" justifyContent="center">
-              <Player name={player.name} vote={player.vote} position={i + 1} />
-            </Flex>
-          </GridItem>
+          <div
+            key={player.id ?? i}
+            className={cn(
+              'flex flex-col items-center gap-2 relative',
+              colStart,
+              rowStart,
+              rowStart === 'row-start-1' && 'flex-col-reverse',
+            )}
+          >
+            <div
+              className={cn(
+                'absolute z-20 h-14 w-10 bg-yellow-200 rounded shadow-lg  items-center justify-between p-1 hidden',
+                cardPosition,
+                game.isRevealed && 'flex',
+              )}
+            >
+              <Icons.diamond className="h-2.5 self-start" />
+              <p className="text-lg font-bold">1</p>
+              <Icons.diamond className="h-2.5 self-end" />
+            </div>
+            <Icons.chair
+              className={cn(
+                'flex-1 fill-slate-300 transition-colors',
+                chairRotate,
+                player.vote && 'fill-red-700',
+              )}
+            />
+            <p className="line-clamp-1 font-bold">{player.name}</p>
+          </div>
         );
       })}
-      <GridItem area={'table'}>
-        <Flex h="100%" alignItems="center" justifyContent="center">
-          <Image h="95%" src={tableSrc} alt="Table" mt={2} />
-        </Flex>
-      </GridItem>
-    </Grid>
+    </div>
   );
 }

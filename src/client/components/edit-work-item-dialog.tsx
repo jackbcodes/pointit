@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRPCClientError } from '@trpc/client';
-import { Loader2, Pencil } from 'lucide-react';
+import { Edit, Loader2, Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -29,24 +28,36 @@ import {
 } from './ui/form';
 
 const formSchema = z.object({
-  playerName: z.string({
-    required_error: 'Please enter your name',
+  title: z.string({
+    required_error: 'Please enter the title',
   }),
+  description: z.string({
+    required_error: 'Please enter a description',
+  }),
+  url: z.string().url().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface ChangeNameDialogProps {
-  playerName: string;
+interface EditWorkItemDialogProps {
+  title?: string;
+  description?: string;
+  url?: string;
 }
 
-export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
+export function EditWorkItemDialog({
+  title,
+  description,
+  url,
+}: EditWorkItemDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const changeName = api.player.changeName.useMutation();
+  const add = api.workItem.add.useMutation();
 
   const defaultValues: Partial<FormValues> = {
-    playerName,
+    title,
+    description,
+    url,
   };
 
   const form = useForm<FormValues>({
@@ -56,15 +67,12 @@ export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
 
   async function onSubmit(formData: FormValues) {
     try {
-      await changeName.mutateAsync(formData.playerName);
+      await add.mutateAsync(formData);
 
       setIsOpen(false);
-    } catch (error) {
+    } catch {
       form.setError('root.serverError', {
-        message:
-          error instanceof TRPCClientError
-            ? error.message
-            : 'There was an error joining the game, please try again',
+        message: 'There was an unexpected error, please try again',
       });
     }
   }
@@ -78,23 +86,51 @@ export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="ghost" className="w-full justify-start">
-          <Pencil className="mr-2 h-4 w-4" />
-          Change name
+        <Button variant="ghost" size="icon" className="h-6 w-6">
+          {title ? <Edit className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+          <span className="sr-only">Edit work item</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Change name</DialogTitle>
+          <DialogTitle>{title ? 'Edit' : 'Add'} work item</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="playerName"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your name</FormLabel>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>URL</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

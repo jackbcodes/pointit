@@ -40,16 +40,16 @@ export function SeeFullDetailsWorkItemModal({
               <Text>{game.workItem?.title}</Text>
             </Stack>
 
-            {game.workItem?.url ? (
+            {game.workItem?.url && (
               <Stack spacing={1}>
                 <Heading size="xxs">Description</Heading>
                 <Text>{game.workItem?.description}</Text>
               </Stack>
-            ) : undefined}
+            )}
           </Stack>
         </ModalBody>
         <ModalFooter>
-          {game.workItem?.url ? (
+          {game.workItem?.url && (
             <Link
               href={game.workItem?.url}
               isExternal
@@ -59,7 +59,7 @@ export function SeeFullDetailsWorkItemModal({
                 Open
               </Button>
             </Link>
-          ) : undefined}
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
