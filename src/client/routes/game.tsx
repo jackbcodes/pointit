@@ -3,12 +3,14 @@ import { useEffect } from 'react';
 import { PanelLeftOpen } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { ResultsSummary } from '~/components/results-summary';
 import { RevealButton } from '~/components/reveal-button';
 import { Sidebar } from '~/components/sidebar';
 import { Spinner } from '~/components/spinner';
-import { Table } from '~/components/table';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
+import { VotePicker } from '~/components/vote-picker';
+import { Voters } from '~/components/voters';
 import { api } from '~/utils/api';
 
 export default function Game() {
@@ -88,8 +90,16 @@ export default function Game() {
           <Sidebar />
         </aside>
 
-        <main className="flex min-h-screen flex-col items-center p-4 pt-20 lg:ml-72 lg:pt-6">
-          <Table />
+        <main className="flex min-h-screen flex-col items-center justify-between p-4 pb-8 pt-24 lg:ml-72 lg:pt-8">
+          <div className="grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-3">
+            <Voters />
+            <img
+              src="/assets/table.png"
+              className="col-span-4 col-start-2 row-span-2 row-start-2"
+              alt="table"
+            />
+          </div>
+          {gameQuery.data.isRevealed ? <ResultsSummary /> : <VotePicker />}
         </main>
       </div>
     );

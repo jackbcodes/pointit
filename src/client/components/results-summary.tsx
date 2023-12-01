@@ -1,14 +1,10 @@
 import { useMemo } from 'react';
 
-import { SimpleGrid, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
-
-import { BigCard } from '~/components/big-card';
+import { Icons } from '~/components/icons';
 import { useGame } from '~/hooks/use-game';
-import { getSuitFromCardIndex } from '~/utils/misc';
 
 export function ResultsSummary() {
   const game = useGame();
-  const isLgBreakpoint = useBreakpointValue({ base: false, lg: true });
 
   const allVotes = useMemo(
     () => game.players.map((player) => player.vote).filter(Boolean),
@@ -19,43 +15,34 @@ export function ResultsSummary() {
 
   const occurrencesKeys = Object.keys(occurrences);
 
-  const cardsColumns = isLgBreakpoint
-    ? occurrencesKeys.length
-    : occurrencesKeys.length === 1
-      ? 1
-      : 2;
-
   const numberVotes = allVotes.map(Number).filter(Boolean);
 
   // Calculate average for only numbers (e.g. not t-shirt sizes or '?' cards)
   const average = calculateAverage(numberVotes);
 
   return (
-    <Stack direction="row" spacing="10" alignItems="flex-start">
-      <SimpleGrid columns={cardsColumns} spacing={6}>
-        {occurrencesKeys.map((points) => (
-          <Stack key={points} align="center">
-            <BigCard
-              points={points}
-              suit={getSuitFromCardIndex(
-                game.votingSystem.values.indexOf(points),
-              )}
-            />
-            <Text textAlign="center">
-              {occurrences[points]} Vote{occurrences[points] > 1 ? 's' : ''}
-            </Text>
-          </Stack>
+    <div className="flex items-center gap-8">
+      <div className="flex flex-wrap  gap-4">
+        {occurrencesKeys.map((vote) => (
+          <div key={vote} className="space-y-1">
+            <p className="text-center">x{occurrences[vote]}</p>
+            <div className="relative flex h-20 w-14 items-center justify-center rounded-lg border-4 border-primary text-primary">
+              <Icons.diamond className="absolute left-1 top-1 h-3 opacity-40" />
+              <p className="text-2xl font-bold ">1</p>
+              <Icons.diamond className="absolute bottom-1 right-1 h-3 opacity-40" />
+            </div>
+          </div>
         ))}
-      </SimpleGrid>
+      </div>
       {numberVotes.length > 0 && (
-        <Stack align="center">
-          <Text fontSize={{ base: 'lg', lg: 'xl' }}>Average:</Text>
-          <Text fontSize={{ base: '3xl', lg: '4xl' }} fontWeight="semibold">
+        <div className="space-y-2 text-center">
+          <p className="text-xl">Average:</p>
+          <p className="text-4xl font-bold">
             {Number.parseFloat(average.toFixed(1))}
-          </Text>
-        </Stack>
+          </p>
+        </div>
       )}
-    </Stack>
+    </div>
   );
 }
 

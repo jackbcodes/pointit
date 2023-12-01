@@ -1,11 +1,9 @@
-import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Game from '~/routes/game';
 import Join from '~/routes/join';
 import Root from '~/routes/root';
-import { theme } from '~/styles/theme';
 import { TRPCProvider, trpcClient } from '~/utils/api';
 
 import { ThemeProvider } from './components/theme-provider';
@@ -43,9 +41,7 @@ export default function App() {
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <TRPCProvider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <ChakraProvider theme={theme}>
-            <RouterProvider router={router} />
-          </ChakraProvider>
+          <RouterProvider router={router} />
         </QueryClientProvider>
       </TRPCProvider>
     </ThemeProvider>
