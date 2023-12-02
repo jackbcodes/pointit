@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
+import { Icons } from '~/components/icons';
+import { SuitIcon } from '~/components/suit-icon';
 import { useGame } from '~/hooks/use-game';
 import { cn } from '~/utils/misc';
-
-import { Icons } from './icons';
 
 const POSITIONS = [
   ['col-start-2', 'row-start-1', 'rotate-0', '-bottom-10'],
@@ -28,19 +28,22 @@ export function Voters() {
   const game = useGame();
 
   const voters = useMemo(
-    () => game.players.filter((player) => !player.isSpectator),
+    () =>
+      game.players
+        .filter((player) => !player.isSpectator)
+        .map((player, index) => ({
+          player,
+          position: POSITIONS[index],
+        })),
     [game.players],
   );
 
-  return POSITIONS.map(([colStart, rowStart, chairRotate, cardPosition], i) => {
-    const player = voters[i];
-    if (!player) return;
-
-    return (
+  return voters.map(
+    ({ player, position: [colStart, rowStart, chairRotate, cardPosition] }) => (
       <div
-        key={player.id ?? i}
+        key={player.id}
         className={cn(
-          'flex flex-col items-center gap-2 relative',
+          'flex flex-col items-center gap-2 relative animate-in fade-in',
           colStart,
           rowStart,
           rowStart === 'row-start-1' && 'flex-col-reverse',
@@ -48,24 +51,30 @@ export function Voters() {
       >
         <div
           className={cn(
-            'absolute z-20 h-14 w-10 bg-yellow-200 rounded shadow-lg items-center justify-center hidden',
+            'absolute z-20 h-14 w-10 bg-yellow-200 rounded shadow-lg items-center justify-center animate-in spin-in-45',
             cardPosition,
-            game.isRevealed && 'flex',
+            game.isRevealed && player.vote ? 'flex' : 'hidden',
           )}
         >
-          <Icons.diamond className="absolute left-1 top-1 h-2.5 fill-red-800" />
-          <p className="text-lg font-bold">{player.vote}</p>
-          <Icons.diamond className="absolute bottom-1 right-1 h-2.5 fill-red-800" />
+          <SuitIcon
+            vote={player.vote}
+            className="absolute left-1 top-1 h-2.5"
+          />
+          <p className="text-lg font-bold text-black">{player.vote}</p>
+          <SuitIcon
+            vote={player.vote}
+            className="absolute bottom-1 right-1 h-2.5"
+          />
         </div>
         <Icons.chair
           className={cn(
-            'flex-1 fill-slate-300 transition-colors',
+            'flex-1 fill-slate-300 dark:fill-slate-500 transition-colors',
             chairRotate,
-            player.vote && 'fill-red-700',
+            player.vote && 'fill-red-700 dark:fill-red-800',
           )}
         />
         <p className="line-clamp-1 font-bold">{player.name}</p>
       </div>
-    );
-  });
+    ),
+  );
 }

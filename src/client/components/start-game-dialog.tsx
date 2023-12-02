@@ -5,6 +5,14 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '~/components//ui/form';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,
@@ -15,18 +23,9 @@ import {
   DialogTrigger,
 } from '~/components/ui/dialog';
 import { Input } from '~/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from './ui/form';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 
 const DEFAULT_VOTING_SYSTEMS = {
   fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '?', '☕️'],
@@ -34,9 +33,6 @@ const DEFAULT_VOTING_SYSTEMS = {
 };
 
 const formSchema = z.object({
-  gameName: z.string({
-    required_error: "Please enter the game's name",
-  }),
   playerName: z.string({
     required_error: 'Please enter your name',
   }),
@@ -86,7 +82,7 @@ export function StartGameDialog({ playerName }: StartGameDialogProps) {
   }
 
   return (
-    <Dialog onOpenChange={() => form.reset()}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button size="lg">
           Start game <ArrowRight className="ml-2 h-4 w-4" />
@@ -98,20 +94,6 @@ export function StartGameDialog({ playerName }: StartGameDialogProps) {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="gameName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Game&apos;s name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="playerName"

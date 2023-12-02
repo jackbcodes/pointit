@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Edit, Loader2, Plus } from 'lucide-react';
+import { Edit2, Loader2, Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,10 +14,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '~/components/ui/dialog';
-import { Input } from '~/components/ui/input';
-import { api } from '~/utils/api';
-import { cn } from '~/utils/misc';
-
 import {
   Form,
   FormControl,
@@ -25,16 +21,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
+} from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
+import { api } from '~/utils/api';
+import { cn, emptyStringToUndefined } from '~/utils/misc';
 
 const formSchema = z.object({
-  title: z.string({
-    required_error: 'Please enter the title',
-  }),
-  description: z.string({
-    required_error: 'Please enter a description',
-  }),
-  url: z.string().url().optional(),
+  title: emptyStringToUndefined.pipe(
+    z.string({
+      required_error: 'Please enter the title',
+    }),
+  ),
+  description: emptyStringToUndefined.pipe(
+    z.string({
+      required_error: 'Please enter a description',
+    }),
+  ),
+  url: emptyStringToUndefined.pipe(
+    z.string().url('Please enter a valid URL').optional(),
+  ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -54,21 +59,18 @@ export function EditWorkItemDialog({
 
   const add = api.workItem.add.useMutation();
 
-  const defaultValues: Partial<FormValues> = {
-    title,
-    description,
-    url,
-  };
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    values: {
+      title: title ?? '',
+      description: description ?? '',
+      url,
+    },
   });
 
   async function onSubmit(formData: FormValues) {
     try {
       await add.mutateAsync(formData);
-
       setIsOpen(false);
     } catch {
       form.setError('root.serverError', {
@@ -82,12 +84,12 @@ export function EditWorkItemDialog({
       open={isOpen}
       onOpenChange={(open) => {
         setIsOpen(open);
-        form.reset();
+        if (!open) form.reset();
       }}
     >
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="h-6 w-6">
-          {title ? <Edit className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+          {title ? <Edit2 className="h-3" /> : <Plus className="h-3" />}
           <span className="sr-only">Edit work item</span>
         </Button>
       </DialogTrigger>

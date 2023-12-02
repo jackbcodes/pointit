@@ -3,10 +3,9 @@ import { Suspense, lazy } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { Spinner } from '~/components/spinner';
+import { ThemeProvider } from '~/components/theme-provider';
 import { TRPCProvider, trpcClient } from '~/utils/api';
-
-import { Spinner } from './components/spinner';
-import { ThemeProvider } from './components/theme-provider';
 
 const Root = lazy(() => import('~/routes/root'));
 const Join = lazy(() => import('~/routes/join'));

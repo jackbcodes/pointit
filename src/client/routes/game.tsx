@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 import { PanelLeftOpen } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ResultsSummary } from '~/components/results-summary';
+import { ColorModeToggle } from '~/components/color-mode-toggle';
+import { GitHubLink } from '~/components/github-link';
+import { Results } from '~/components/results';
 import { RevealButton } from '~/components/reveal-button';
 import { Sidebar } from '~/components/sidebar';
 import { Spinner } from '~/components/spinner';
@@ -58,57 +60,55 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
-  if (gameQuery.data && playerQuery.data) {
-    if (!isPlayerInGame) {
-      navigate(`/join/${gameId}`);
-      return;
-    }
+  if (gameQuery.isLoading || playerQuery.isLoading) return <Spinner />;
 
-    return (
-      <div className="bg-background-game">
-        <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background px-4 py-2.5 lg:hidden">
-          <div className="flex items-center justify-between">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <PanelLeftOpen className="h-5 w-5" />
-                  <span className="sr-only">Open sidebar</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <Sidebar />
-              </SheetContent>
-            </Sheet>
+  if (gameQuery.error || !gameQuery.data) navigate('/');
 
-            <div className="flex items-center gap-2">
-              <RevealButton size="sm" />
-            </div>
+  if (!isPlayerInGame) navigate(`/join/${gameId}`, { replace: true });
+
+  return (
+    <div className="bg-background-game">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background px-4 py-2.5 lg:hidden">
+        <div className="flex items-center justify-between">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <PanelLeftOpen className="h-5 w-5" />
+                <span className="sr-only">Open sidebar</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <Sidebar />
+            </SheetContent>
+          </Sheet>
+
+          <div className="flex items-center gap-2">
+            <RevealButton size="sm" />
+            <GitHubLink />
+            <ColorModeToggle />
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <aside className="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-border bg-background px-5 py-6 transition-transform lg:translate-x-0">
-          <Sidebar />
-        </aside>
+      <aside className="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-border bg-background px-5 py-6 transition-transform lg:translate-x-0">
+        <Sidebar />
+      </aside>
 
-        <main className="flex min-h-screen flex-col items-center justify-between p-4 pb-8 pt-24 lg:ml-72 lg:pt-8">
-          <div className="grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-3">
-            <Voters />
-            <img
-              src="/assets/table.png"
-              className="col-span-4 col-start-2 row-span-2 row-start-2"
-              alt="table"
-            />
-          </div>
-          {gameQuery.data.isRevealed ? <ResultsSummary /> : <VotePicker />}
-        </main>
-      </div>
-    );
-  }
-
-  if (gameQuery.error) {
-    navigate('/');
-    return;
-  }
-
-  return <Spinner />;
+      <main className="flex min-h-screen flex-col items-center justify-between p-4 pb-8 pt-24 lg:ml-72 lg:pt-8">
+        <div className="absolute right-8 top-4 hidden space-x-2 md:block">
+          <GitHubLink />
+          <ColorModeToggle />
+        </div>
+        <div className="grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-5">
+          <Voters />
+          <img
+            src="/assets/table.png"
+            className="col-span-4 col-start-2 row-span-2 row-start-2"
+            alt="table"
+          />
+        </div>
+        {gameQuery.data?.isRevealed ? <Results /> : <VotePicker />}
+      </main>
+    </div>
+  );
 }

@@ -31,7 +31,6 @@ export const gameRouter = createTRPCRouter({
       await createGame({
         game: {
           id: gameId,
-          name: input.gameName,
           isRevealed: false,
         },
         player: {

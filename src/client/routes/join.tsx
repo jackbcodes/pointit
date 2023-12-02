@@ -6,9 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import { ColorModeToggle } from '~/components/color-mode-toggle';
+import { GitHubLink } from '~/components/github-link';
 import { Icons } from '~/components/icons';
 import { Spinner } from '~/components/spinner';
-import { Button, buttonVariants } from '~/components/ui/button';
+import { Button } from '~/components/ui/button';
 import {
   Form,
   FormControl,
@@ -22,12 +23,17 @@ import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
 
-// TODO: Check if player is already in game
-
 export default function Join() {
+  const { gameId } = useParams();
+  const navigate = useNavigate();
+
   const playerQuery = api.player.get.useQuery();
 
   if (playerQuery.isLoading) return <Spinner />;
+
+  const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
+
+  if (isPlayerInGame) navigate(`/game/${gameId}`, { replace: true });
 
   return (
     <div className="relative h-screen overflow-hidden bg-background-game">
@@ -35,18 +41,7 @@ export default function Join() {
         <header className="flex items-center justify-between py-4">
           <Icons.logo className="h-9" />
           <div className="flex items-center space-x-2">
-            <a
-              href="https:google.com"
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants({
-                variant: 'ghost',
-                size: 'icon',
-              })}
-            >
-              <Icons.gitHub className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
-            </a>
+            <GitHubLink />
             <ColorModeToggle />
           </div>
         </header>

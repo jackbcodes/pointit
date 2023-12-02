@@ -1,8 +1,17 @@
+import isEmpty from 'lodash.isempty';
 import { z } from 'zod';
 
-const booleanSchema = z
-  .union([z.enum(['true', 'false']), z.boolean()])
-  .transform((value) => (typeof value === 'string' ? value === 'true' : value));
+// Redis transformations
+
+const stringToBoolean = z.preprocess(
+  (value) => (typeof value === 'string' ? JSON.parse(value) : value),
+  z.boolean(),
+);
+
+const emptyStringToUndefined = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().optional(),
+);
 
 // JWT
 
@@ -14,25 +23,12 @@ export type JwtPayload = z.infer<typeof jwtPayloadSchema>;
 
 // Voting system
 
-const votingSystemValuesSchema = z.array(z.string());
-
 export const votingSystemSchema = z.object({
   name: z.string(),
-  values: z
-    .union([z.string(), votingSystemValuesSchema])
-    .transform((value, ctx) => {
-      if (typeof value !== 'string') return value;
-
-      const result = votingSystemValuesSchema.safeParse(JSON.parse(value));
-      if (result.success) return result.data;
-
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'String must represent an array',
-        fatal: true,
-      });
-      return z.NEVER;
-    }),
+  values: z.preprocess(
+    (value) => (typeof value === 'string' ? JSON.parse(value) : value),
+    z.array(z.string()),
+  ),
 });
 
 export type VotingSystem = z.infer<typeof votingSystemSchema>;
@@ -42,7 +38,7 @@ export type VotingSystem = z.infer<typeof votingSystemSchema>;
 export const workItemSchema = z.object({
   title: z.string(),
   description: z.string(),
-  url: z.string().url().optional(),
+  url: emptyStringToUndefined.pipe(z.string().url().optional()),
 });
 
 export type WorkItem = z.infer<typeof workItemSchema>;
@@ -54,7 +50,7 @@ export const playerSchema = z.object({
   name: z.string(),
   gameId: z.string(),
   vote: z.string(),
-  isSpectator: booleanSchema,
+  isSpectator: stringToBoolean,
   joinedAt: z.coerce.date(),
   createdAt: z.coerce.date(),
 });
@@ -65,8 +61,7 @@ export type Player = z.infer<typeof playerSchema>;
 
 export const gameSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  isRevealed: booleanSchema,
+  isRevealed: stringToBoolean,
 });
 
 export type Game = z.infer<typeof gameSchema>;
@@ -77,7 +72,10 @@ export const fullGameSchema = gameSchema.merge(
   z.object({
     players: z.array(playerSchema),
     votingSystem: votingSystemSchema,
-    workItem: workItemSchema.optional(),
+    workItem: z.preprocess(
+      (value) => (isEmpty(value) ? undefined : value),
+      workItemSchema.optional(),
+    ),
   }),
 );
 
@@ -86,18 +84,11 @@ export type FullGame = z.infer<typeof fullGameSchema>;
 // Create game
 
 export const createGameSchema = z.object({
-  gameName: z.string(),
   playerName: z.string(),
   votingSystem: votingSystemSchema,
 });
 
 export type CreateGame = z.infer<typeof createGameSchema>;
-
-export const startGameResponseSchema = z.object({
-  id: z.string(),
-});
-
-export type StartGameResponse = z.infer<typeof startGameResponseSchema>;
 
 // Join game
 
@@ -108,11 +99,3 @@ export const joinGameSchema = z.object({
 });
 
 export type JoinGameBody = z.infer<typeof joinGameSchema>;
-
-// Vote
-
-export const voteBodySchema = z.object({
-  value: z.string(),
-});
-
-export type VoteBody = z.infer<typeof voteBodySchema>;

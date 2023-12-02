@@ -15,10 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '~/components/ui/dialog';
-import { Input } from '~/components/ui/input';
-import { api } from '~/utils/api';
-import { cn } from '~/utils/misc';
-
 import {
   Form,
   FormControl,
@@ -26,12 +22,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
+} from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
+import { api } from '~/utils/api';
+import { cn, emptyStringToUndefined } from '~/utils/misc';
 
 const formSchema = z.object({
-  playerName: z.string({
-    required_error: 'Please enter your name',
-  }),
+  playerName: emptyStringToUndefined.pipe(
+    z.string({
+      required_error: 'Please enter your name',
+    }),
+  ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -45,19 +46,16 @@ export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
 
   const changeName = api.player.changeName.useMutation();
 
-  const defaultValues: Partial<FormValues> = {
-    playerName,
-  };
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    values: {
+      playerName,
+    },
   });
 
   async function onSubmit(formData: FormValues) {
     try {
       await changeName.mutateAsync(formData.playerName);
-
       setIsOpen(false);
     } catch (error) {
       form.setError('root.serverError', {
@@ -70,13 +68,7 @@ export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
   }
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        form.reset();
-      }}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" className="w-full justify-start">
           <Pencil className="mr-2 h-4 w-4" />

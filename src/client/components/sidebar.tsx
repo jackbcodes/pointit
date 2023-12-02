@@ -1,19 +1,12 @@
 import { useMemo } from 'react';
 
-import { ExternalLink, Eye, LogOut, User } from 'lucide-react';
+import { ExternalLink, Eye, LogOut, Trash2, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+import { ChangeNameDialog } from '~/components/change-name-dialog';
+import { EditWorkItemDialog } from '~/components/edit-work-item-dialog';
 import { Icons } from '~/components/icons';
 import { RevealButton } from '~/components/reveal-button';
-import { Button, ButtonProps } from '~/components/ui/button';
-import { Toggle } from '~/components/ui/toggle';
-import { useGame } from '~/hooks/use-game';
-import { usePlayer } from '~/hooks/use-player';
-import { api } from '~/utils/api';
-import { cn } from '~/utils/misc';
-
-import { ChangeNameDialog } from './change-name-dialog';
-import { EditWorkItemDialog } from './edit-work-item-dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,8 +17,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './ui/alert-dialog';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
+} from '~/components/ui/alert-dialog';
+import { Button, ButtonProps, buttonVariants } from '~/components/ui/button';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '~/components/ui/hover-card';
+import { Toggle } from '~/components/ui/toggle';
+import { useGame } from '~/hooks/use-game';
+import { usePlayer } from '~/hooks/use-player';
+import { api } from '~/utils/api';
+import { cn } from '~/utils/misc';
 
 export function Sidebar() {
   const game = useGame();
@@ -37,8 +40,6 @@ export function Sidebar() {
     () => game.players.filter(({ isSpectator }) => isSpectator),
     [game.players],
   );
-
-  // TODO: Fix server zod issues with url on work item
 
   return (
     <div className="flex h-full flex-col">
@@ -57,27 +58,20 @@ export function Sidebar() {
             <Eye className="mr-2 h-4 w-4" />
             Spectator mode
           </Toggle>
-          <LeaveButton className="lg:hidden" />
+          <LeaveGameAlertDialog className="lg:hidden" />
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-sm font-bold tracking-widest text-primary">
               VOTING ON
             </p>
-            <div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn('h-6 w-6 hidden', game.workItem?.url && 'block')}
-              >
-                <ExternalLink className="h-3 w-3" />
-                <span className="sr-only">Open external</span>
-              </Button>
+            <div className="flex gap-1">
               <EditWorkItemDialog {...game.workItem} />
+              <RemoveWorkItemAlertDialog />
             </div>
           </div>
           <div>
-            <HoverCard>
+            <HoverCard openDelay={100}>
               <HoverCardTrigger
                 className={cn(
                   'group space-y-1.5 hover:cursor-pointer hidden',
@@ -91,20 +85,36 @@ export function Sidebar() {
                   {game.workItem?.description}
                 </p>
               </HoverCardTrigger>
-              <HoverCardContent className="space-y-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-bold">Title</p>
-                  <p className="text-sm">{game.workItem?.title}</p>
+              <HoverCardContent className="relative space-y-2">
+                <div className="flex justify-between">
+                  <div className="space-y-1 whitespace-normal">
+                    <p className="text-sm font-bold">Title</p>
+                    <p className="text-sm">{game.workItem?.title}</p>
+                  </div>
+                  <a
+                    href={game.workItem?.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={cn(
+                      buttonVariants({
+                        variant: 'ghost',
+                        size: 'icon',
+                      }),
+                      'h-6 w-6 hidden',
+                      game.workItem?.url && 'inline-flex',
+                    )}
+                  >
+                    <ExternalLink className="h-3" />
+                    <span className="sr-only">Open work item</span>
+                  </a>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-bold">Description</p>
-                  <p className="text-sm text-muted-foreground">
-                    {game.workItem?.description}
-                  </p>
+                  <p className="text-sm">{game.workItem?.description}</p>
                 </div>
               </HoverCardContent>
             </HoverCard>
-            <p className={cn('text-sm', game.workItem && 'hidden')}>
+            <p className={cn('text-sm', game.workItem?.title && 'hidden')}>
               No work item added
             </p>
           </div>
@@ -131,13 +141,13 @@ export function Sidebar() {
       </div>
       <div className="hidden space-y-3 lg:block">
         <RevealButton />
-        <LeaveButton />
+        <LeaveGameAlertDialog />
       </div>
     </div>
   );
 }
 
-function LeaveButton(props: ButtonProps) {
+function LeaveGameAlertDialog(props: ButtonProps) {
   const navigate = useNavigate();
 
   const leaveGame = api.player.leaveGame.useMutation();
@@ -149,7 +159,7 @@ function LeaveButton(props: ButtonProps) {
           {...props}
           variant="ghost"
           className={cn(
-            'w-full justify-start text-destructive hover:text-destructive',
+            'w-full justify-start text-destructive dark:text-red-500 hover:text-destructive',
             props.className,
           )}
         >
@@ -173,7 +183,43 @@ function LeaveButton(props: ButtonProps) {
               navigate('/');
             }}
           >
-            Continue
+            Leave
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function RemoveWorkItemAlertDialog() {
+  const game = useGame();
+
+  const remove = api.workItem.remove.useMutation();
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn('h-6 w-6', !game.workItem?.title && 'hidden')}
+        >
+          <Trash2 className="h-3" />
+          <span className="sr-only">Remove work item</span>
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Remove work item</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to remove this work item? This action cannot
+            be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={async () => await remove.mutateAsync()}>
+            Remove
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 
-import { Icons } from '~/components/icons';
 import { useGame } from '~/hooks/use-game';
 
-export function ResultsSummary() {
+import { SuitIcon } from './suit-icon';
+
+export function Results() {
   const game = useGame();
 
   const allVotes = useMemo(
@@ -21,15 +22,21 @@ export function ResultsSummary() {
   const average = calculateAverage(numberVotes);
 
   return (
-    <div className="flex items-center gap-8">
+    <div className="flex items-center gap-8 animate-in slide-in-from-bottom">
       <div className="flex flex-wrap  gap-4">
         {occurrencesKeys.map((vote) => (
           <div key={vote} className="space-y-1">
             <p className="text-center">x{occurrences[vote]}</p>
             <div className="relative flex h-20 w-14 items-center justify-center rounded-lg border-4 border-primary text-primary">
-              <Icons.diamond className="absolute left-1 top-1 h-3 opacity-40" />
-              <p className="text-2xl font-bold ">1</p>
-              <Icons.diamond className="absolute bottom-1 right-1 h-3 opacity-40" />
+              <SuitIcon
+                vote={vote}
+                className="absolute left-1 top-1 h-3 fill-current opacity-40"
+              />
+              <p className="text-2xl font-bold ">{vote}</p>
+              <SuitIcon
+                vote={vote}
+                className="absolute bottom-1 right-1 h-3 fill-current opacity-40"
+              />
             </div>
           </div>
         ))}

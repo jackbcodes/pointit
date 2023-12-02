@@ -1,8 +1,8 @@
 import { ColorModeToggle } from '~/components/color-mode-toggle';
+import { GitHubLink } from '~/components/github-link';
 import { Icons } from '~/components/icons';
 import { Spinner } from '~/components/spinner';
 import { StartGameDialog } from '~/components/start-game-dialog';
-import { buttonVariants } from '~/components/ui/button';
 import { useIsScrolled } from '~/hooks/use-is-scrolled';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
@@ -25,18 +25,7 @@ export default function Root() {
         <div className="container flex items-center justify-between py-4">
           <Icons.logo className="h-9" />
           <div className="flex items-center space-x-2">
-            <a
-              href="https:google.com"
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants({
-                variant: 'ghost',
-                size: 'icon',
-              })}
-            >
-              <Icons.gitHub className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
-            </a>
+            <GitHubLink />
             <ColorModeToggle />
           </div>
         </div>

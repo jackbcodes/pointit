@@ -41,6 +41,16 @@ module.exports = {
       },
     },
   },
+  overrides: [
+    //https://github.com/shadcn-ui/ui/issues/120
+    {
+      files: ['**/components/ui/*.tsx'],
+      rules: {
+        'react/prop-types': 'off',
+        'react-refresh/only-export-components': 'off',
+      },
+    },
+  ],
   rules: {
     'react-refresh/only-export-components': [
       'warn',

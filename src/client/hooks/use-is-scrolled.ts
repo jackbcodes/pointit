@@ -14,7 +14,7 @@ export function useIsScrolled(offset?: number) {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [offset]);
 
   return isScrolled;
 }

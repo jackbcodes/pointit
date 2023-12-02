@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 
+import { Button, ButtonProps } from '~/components/ui/button';
 import { useGame } from '~/hooks/use-game';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
-
-import { Button, ButtonProps } from './ui/button';
 
 export function RevealButton(props: ButtonProps) {
   const game = useGame();
