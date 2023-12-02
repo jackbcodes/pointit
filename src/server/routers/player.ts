@@ -71,6 +71,16 @@ export const playerRouter = createTRPCRouter({
         publishUpdatedPlayers(ctx.player.gameId),
         publishUpdatedGame(ctx.player.gameId),
       ]);
+
+      const exists = Boolean(
+        await redis.exists(`players:${ctx.player.gameId}`),
+      );
+
+      if (!exists)
+        await redis.del(
+          `game:${ctx.player.gameId}`,
+          `voting-system:${ctx.player.gameId}`,
+        );
     } catch (error) {
       console.log(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });

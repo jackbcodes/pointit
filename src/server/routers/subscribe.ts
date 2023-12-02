@@ -51,7 +51,6 @@ router.get('/game/:gameId/subscribe', async (req, res) => {
   };
 
   req.on('close', closeHandler);
-
   req.on('end', closeHandler);
 });
 
