@@ -14,7 +14,6 @@ export const playerRouter = createTRPCRouter({
   // eslint-disable-next-line unicorn/no-null -- react-query doesn't allow sending undefined
   get: publicProcedure.query(({ ctx }) => ctx.player ?? null),
 
-  // TODO: Combine player updates into one?
   vote: protectedProcedure
     .input(z.string().optional())
     .mutation(async ({ ctx, input }) => {
@@ -73,7 +72,15 @@ export const playerRouter = createTRPCRouter({
         publishUpdatedGame(ctx.player.gameId),
       ]);
 
-      // TODO: Unsubscribe from game
+      const exists = Boolean(
+        await redis.exists(`players:${ctx.player.gameId}`),
+      );
+
+      if (!exists)
+        await redis.del(
+          `game:${ctx.player.gameId}`,
+          `voting-system:${ctx.player.gameId}`,
+        );
     } catch (error) {
       console.log(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });

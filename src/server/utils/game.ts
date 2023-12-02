@@ -70,7 +70,7 @@ export async function getFullGameById(id: string) {
     ...game,
     players,
     votingSystem,
-    workItem: Object.keys(workItem).length > 0 ? workItem : undefined,
+    workItem,
   };
 
   const result = fullGameSchema.safeParse(fullGame);

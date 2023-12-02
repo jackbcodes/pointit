@@ -13,6 +13,12 @@ To run the app locally we need to first run Redis on your machine. This guide wi
    docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
    ```
 
+Connect to the server using `redis-cli`:
+
+```sh
+docker exec -it redis-stack redis-cli
+```
+
 ### Start app
 
 ```sh

@@ -1,0 +1,29 @@
+@font-face {
+  font-display: swap;
+  font-family: 'Vodafone';
+  font-style: normal;
+  font-weight: 700;
+  src:
+    url('/fonts/vodafone-bold.woff2') format('woff2'),
+    url('/fonts/vodafone-bold.woff') format('woff');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Vodafone';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url('/fonts/vodafone-regular.woff2') format('woff2'),
+    url('/fonts/vodafone-regular.woff') format('woff');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Vodafone';
+  font-style: normal;
+  font-weight: 300;
+  src:
+    url('/fonts/vodafone-light.woff2') format('woff2'),
+    url('/fonts/vodafone-light.woff') format('woff');
+}

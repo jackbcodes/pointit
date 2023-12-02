@@ -1,43 +1,29 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
-import {
-  Container,
-  Flex,
-  Heading,
-  Show,
-  Stack,
-  useBreakpointValue,
-} from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { PanelLeftOpen } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { ColorModeButton } from '~/components/color-mode-button';
-import { LoadingGameSpinner } from '~/components/loading-game-spinner';
-import { JoinGameModal } from '~/components/modals/join-game-modal';
-import { ResultsSummary } from '~/components/results-summary';
+import { ColorModeToggle } from '~/components/color-mode-toggle';
+import { GitHubLink } from '~/components/github-link';
+import { Results } from '~/components/results';
+import { RevealButton } from '~/components/reveal-button';
 import { Sidebar } from '~/components/sidebar';
-import { Table } from '~/components/table';
+import { Spinner } from '~/components/spinner';
+import { Button } from '~/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
 import { VotePicker } from '~/components/vote-picker';
-import { useBackgroundColor } from '~/hooks/use-background-color';
+import { Voters } from '~/components/voters';
 import { api } from '~/utils/api';
 
 export default function Game() {
   const { gameId } = useParams();
+  const navigate = useNavigate();
 
   const playerQuery = api.player.get.useQuery();
   const gameQuery = api.game.getById.useQuery(gameId!);
   const utils = api.useUtils();
 
-  const bgColor = useBackgroundColor('canvas');
-  const headingSize = useBreakpointValue({ base: 'xs', lg: 'sm' });
-
-  const isPlayerInGame = useMemo(
-    () => Boolean(gameId === playerQuery.data?.gameId),
-    [playerQuery.data?.gameId, gameId],
-  );
-
-  useEffect(() => {
-    if (gameQuery.data) document.title = `${gameQuery.data.name} | PointIt`;
-  }, [gameQuery.data]);
+  const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
 
   useEffect(() => {
     if (!isPlayerInGame) return;
@@ -74,69 +60,55 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
-  if (gameQuery.isLoading || playerQuery.isLoading)
-    return <LoadingGameSpinner />;
+  if (gameQuery.isLoading || playerQuery.isLoading) return <Spinner />;
 
-  // TODO: handle no game
-  // if (!gameQuery.data) {
-  //   navigate('/');
-  //   return;
-  // }
+  if (gameQuery.error || !gameQuery.data) navigate('/');
 
-  if (gameQuery.data) {
-    if (!isPlayerInGame)
-      return (
-        <JoinGameModal
-          name={playerQuery.data?.name}
-          isSpectator={playerQuery.data?.isSpectator}
-        />
-      );
+  if (!isPlayerInGame) navigate(`/join/${gameId}`, { replace: true });
 
-    return (
-      <Flex
-        as="section"
-        direction={{ base: 'column', lg: 'row' }}
-        minH="100vh"
-        bgColor={bgColor}
-      >
-        {/* {isDesktop ? <Sidebar /> : <GameNavbar />} */}
+  return (
+    <div className="bg-background-game">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background px-4 py-2.5 lg:hidden">
+        <div className="flex items-center justify-between">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <PanelLeftOpen className="h-5 w-5" />
+                <span className="sr-only">Open sidebar</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <Sidebar />
+            </SheetContent>
+          </Sheet>
+
+          <div className="flex items-center gap-2">
+            <RevealButton size="sm" />
+            <GitHubLink />
+            <ColorModeToggle />
+          </div>
+        </div>
+      </nav>
+
+      <aside className="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-border bg-background px-5 py-6 transition-transform lg:translate-x-0">
         <Sidebar />
-        <Container py={{ base: 4, md: 8 }} display="flex">
-          <Stack
-            spacing={{ base: 6, lg: 0.5 }}
-            flex={1}
-            justifyContent="space-between"
-          >
-            <Stack direction="row" justify="space-between" align="center">
-              <Heading size={headingSize} fontWeight="medium">
-                {gameQuery.data.name}
-              </Heading>
-              <Stack direction="row">
-                {/* <Menu /> */}
-                <Show above="lg">
-                  <ColorModeButton />
-                </Show>
-              </Stack>
-            </Stack>
-            <Stack
-              justifyContent="space-between"
-              flex={1}
-              spacing={{ base: 6, lg: 0 }}
-            >
-              <Stack align="center">
-                <Table />
-              </Stack>
-              <Stack align="center">
-                {gameQuery.data.isRevealed ? (
-                  <ResultsSummary />
-                ) : (
-                  <VotePicker />
-                )}
-              </Stack>
-            </Stack>
-          </Stack>
-        </Container>
-      </Flex>
-    );
-  }
+      </aside>
+
+      <main className="flex min-h-screen flex-col items-center justify-between p-4 pb-8 pt-24 lg:ml-72 lg:pt-8">
+        <div className="absolute right-8 top-4 hidden space-x-2 md:block">
+          <GitHubLink />
+          <ColorModeToggle />
+        </div>
+        <div className="grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-5">
+          <Voters />
+          <img
+            src="/assets/table.png"
+            className="col-span-4 col-start-2 row-span-2 row-start-2"
+            alt="table"
+          />
+        </div>
+        {gameQuery.data?.isRevealed ? <Results /> : <VotePicker />}
+      </main>
+    </div>
+  );
 }

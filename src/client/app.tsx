@@ -1,17 +1,25 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { Suspense, lazy } from 'react';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Game from '~/routes/game';
-import Root from '~/routes/root';
-import { Fonts } from '~/styles/fonts';
-import { theme } from '~/styles/theme';
+import { Spinner } from '~/components/spinner';
+import { ThemeProvider } from '~/components/theme-provider';
 import { TRPCProvider, trpcClient } from '~/utils/api';
+
+const Root = lazy(() => import('~/routes/root'));
+const Join = lazy(() => import('~/routes/join'));
+const Game = lazy(() => import('~/routes/game'));
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+  },
+
+  {
+    path: '/join/:gameId',
+    element: <Join />,
   },
   {
     path: '/game/:gameId',
@@ -33,13 +41,14 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <TRPCProvider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <Fonts />
-          <RouterProvider router={router} />
-        </ChakraProvider>
-      </QueryClientProvider>
-    </TRPCProvider>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <TRPCProvider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <Suspense fallback={<Spinner />}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </QueryClientProvider>
+      </TRPCProvider>
+    </ThemeProvider>
   );
 }
