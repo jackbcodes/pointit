@@ -29,6 +29,6 @@ export function setAuthCookie(playerId: string, res: Response) {
     secure: true,
     httpOnly: true,
     sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 120,
+    maxAge: 1000 * 60 * 60 * 24 * 30,
   });
 }
