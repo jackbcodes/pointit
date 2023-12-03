@@ -1,31 +1,64 @@
+/* Fallback fonts generated with fontpie */
+
 @font-face {
-  font-display: swap;
   font-family: 'Vodafone';
   font-style: normal;
   font-weight: 300;
-  src: url('/fonts/vodafone-light.woff') format('woff');
+  font-display: swap;
+  src:
+    url('/fonts/vodafone-light.woff2') format('woff2'),
+    url('/fonts/vodafone-light.woff') format('woff');
 }
 
 @font-face {
-  font-display: swap;
   font-family: 'Vodafone';
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/vodafone-regular.woff') format('woff');
+  font-display: swap;
+  src:
+    url('/fonts/vodafone-regular.woff2') format('woff2'),
+    url('/fonts/vodafone-regular.woff') format('woff');
 }
 
 @font-face {
-  font-display: swap;
   font-family: 'Vodafone';
   font-style: normal;
   font-weight: 700;
-  src: url('/fonts/vodafone-bold.woff') format('woff');
+  font-display: swap;
+  src:
+    url('/fonts/vodafone-bold.woff2') format('woff2'),
+    url('/fonts/vodafone-bold.woff') format('woff');
 }
 
 @font-face {
-  font-display: swap;
-  font-family: 'Vodafone';
+  font-family: 'Vodafone Fallback';
   font-style: normal;
-  font-weight: 800;
-  src: url('/fonts/vodafone-extra-bold.woff') format('woff');
+  font-weight: 300;
+  src: local('Arial');
+  ascent-override: 105.71%;
+  descent-override: 28.19%;
+  line-gap-override: 0%;
+  size-adjust: 85.04%;
+}
+
+@font-face {
+  font-family: 'Vodafone Fallback';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Arial');
+  ascent-override: 103.11%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+  size-adjust: 87.18%;
+}
+
+@font-face {
+  font-family: 'Vodafone Fallback';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Arial Bold');
+  ascent-override: 103.81%;
+  descent-override: 27.29%;
+  line-gap-override: 0%;
+  size-adjust: 87.86%;
 }

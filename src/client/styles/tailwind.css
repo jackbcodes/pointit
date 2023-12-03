@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --font-sans: 'Vodafone', system-ui, sans-serif;
+    --font-sans: 'Vodafone', 'Vodafone Fallback';
 
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
