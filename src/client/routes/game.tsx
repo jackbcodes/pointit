@@ -120,5 +120,5 @@ export default function Game() {
     );
   }
 
-  return <ErrorPage />;
+  return <Spinner />;
 }
