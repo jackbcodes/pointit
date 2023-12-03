@@ -66,16 +66,8 @@ jobs:
       - name: 🏗 Build
         run: npm run build
 
-      - name: 🏎️ Start server
-        run: npm run start &
-        env:
-          REDIS_URL: redis://redis:6379
-
       - name: 🎭 Playwright tests
         run: npx playwright test
-
-      - name: 🛑 Stop server
-        run: pkill -f 'npm run start'
 
       - name: 📊 Upload report
         uses: actions/upload-artifact@v3

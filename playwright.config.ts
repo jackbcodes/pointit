@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
 
 const PORT = process.env.PORT ?? '3000';
+const REDIS_URL = process.env.REDIS_URL ?? '6379';
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -39,6 +40,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     env: {
       PORT,
+      REDIS_URL,
     },
   },
 });
