@@ -1,5 +1,5 @@
 import { Home } from 'lucide-react';
-import { useRouteError } from 'react-router-dom';
+import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
 import { Header } from '~/components/header';
 import { buttonVariants } from '~/components/ui/button';
@@ -10,7 +10,8 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   const isNotFound =
-    isTRPCClientError(error) && error.data?.code === 'NOT_FOUND';
+    (isRouteErrorResponse(error) && error.status === 404) ||
+    (isTRPCClientError(error) && error.data?.code === 'NOT_FOUND');
 
   return (
     <div className="h-screen">
@@ -31,7 +32,7 @@ export function ErrorBoundary() {
           </p>
           <p className="mb-4 text-lg font-light text-muted-foreground">
             {isNotFound
-              ? "Sorry, we can't find that game. Please check you have the correct link."
+              ? "Sorry, we can't find that page. Please check you have the correct game link."
               : 'Sorry, an unexpected error occurred. Please refresh the page to try again.'}
           </p>
           <a
