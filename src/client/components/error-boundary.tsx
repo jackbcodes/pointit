@@ -32,7 +32,7 @@ export function ErrorBoundary() {
           </p>
           <p className="mb-4 text-lg font-light text-muted-foreground">
             {isNotFound
-              ? "Sorry, we can't find that page. Please check you have the correct game link."
+              ? "Sorry, we can't find this page. Please check you have the correct game link."
               : 'Sorry, an unexpected error occurred. Please refresh the page to try again.'}
           </p>
           <a

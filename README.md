@@ -22,7 +22,7 @@ docker exec -it redis-stack redis-cli
 ### Start app
 
 ```sh
-yarn dev
+npm run dev
 ```
 
 ## 🚀 Deployment

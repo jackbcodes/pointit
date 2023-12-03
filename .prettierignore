@@ -1,7 +1,10 @@
-# artifacts
-dist/
 node_modules
-# unsupported formats
-yarn.lock
-.gitignore
-.prettierignore
+
+/dist
+.env
+
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+package-lock.json

@@ -10,7 +10,7 @@ import ViteExpress from 'vite-express';
 import { appRouter, subscribeRouter } from '~/routers';
 import { createContext } from '~/utils/trpc';
 
-const port = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? '3000';
 
 const app = express();
 
@@ -27,6 +27,6 @@ app.use(
   }),
 );
 
-ViteExpress.listen(app, Number(port), () =>
-  console.log(`Server is listening on port ${port}...`),
+ViteExpress.listen(app, Number(PORT), () =>
+  console.log(`Server is listening on port ${PORT}...`),
 );

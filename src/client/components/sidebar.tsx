@@ -50,7 +50,7 @@ export function Sidebar() {
           <ChangeNameDialog playerName={player.name} />
           <Toggle
             className="w-full justify-start px-4"
-            aria-label="Toggle player mode"
+            aria-label="Toggle spectator mode"
             pressed={player.isSpectator}
             onPressedChange={async () => {
               await toggleSpectatorMode.mutateAsync();
@@ -135,9 +135,9 @@ export function Sidebar() {
                 <p className="truncate text-sm">{spectator.name}</p>
               </div>
             ))}
-            <p className={cn('text-sm', spectators.length > 0 && 'hidden')}>
-              No spectators
-            </p>
+            {spectators.length === 0 && (
+              <p className="text-sm">No spectators</p>
+            )}
           </div>
         </div>
       </div>
@@ -200,7 +200,7 @@ function RemoveWorkItemAlertDialog() {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
           size="icon"

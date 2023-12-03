@@ -1,5 +1,10 @@
 name: ⚡️ Pre-merge
-on: [pull_request]
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
 
 permissions:
   actions: write
@@ -16,13 +21,64 @@ jobs:
       - name: 🛠️ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
 
       - name: 🔬 ESLint
-        run: yarn lint
+        run: npm run lint
 
       - name: 💄 Prettier
-        run: yarn format:check
+        run: npm run format:check
+
+  playwright:
+    name: 🎭 Playwright
+    runs-on: ubuntu-latest
+    container: node:20-bookworm-slim
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    timeout-minutes: 60
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🏄 Copy test env vars
+        run: cp .env.example .env
+
+      - name: 🛠️ Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 📥 Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: 🏗 Build
+        run: npm run build
+
+      - name: 🏎️ Start server
+        run: npm run start &
+
+      - name: 🎭 Playwright tests
+        run: npx playwright test
+
+      - name: 🛑 Stop server
+        run: pkill -f 'npm run start'
+
+      - name: 📊 Upload report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
