@@ -61,8 +61,6 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
-  if (gameQuery.isLoading || playerQuery.isLoading) return <Spinner />;
-
   if (gameQuery.error || playerQuery.error)
     return (
       <ErrorPage
@@ -70,9 +68,9 @@ export default function Game() {
       />
     );
 
-  if (!isPlayerInGame) navigate(`/join/${gameId}`, { replace: true });
-
   if (gameQuery.data && playerQuery.data) {
+    if (!isPlayerInGame) navigate(`/join/${gameId}`, { replace: true });
+
     return (
       <div className="bg-background-game">
         <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background px-4 py-2.5 lg:hidden">
