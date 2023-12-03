@@ -4,7 +4,6 @@ import { PanelLeftOpen } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ColorModeToggle } from '~/components/color-mode-toggle';
-import { ErrorPage } from '~/components/error-page';
 import { GitHubLink } from '~/components/github-link';
 import { Results } from '~/components/results';
 import { RevealButton } from '~/components/reveal-button';
@@ -61,15 +60,11 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 
-  if (gameQuery.error || playerQuery.error)
-    return (
-      <ErrorPage
-        code={gameQuery.error?.data?.code || playerQuery.error?.data?.code}
-      />
-    );
-
-  if (gameQuery.data && playerQuery.data) {
-    if (!isPlayerInGame) navigate(`/join/${gameId}`, { replace: true });
+  if (gameQuery.data && playerQuery.data !== undefined) {
+    if (!isPlayerInGame) {
+      navigate(`/join/${gameId}`, { replace: true });
+      return;
+    }
 
     return (
       <div className="bg-background-game">

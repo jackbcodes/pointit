@@ -1,4 +1,4 @@
-import { httpBatchLink } from '@trpc/client';
+import { TRPCClientError, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import superjson from 'superjson';
 
@@ -24,3 +24,9 @@ export const trpcClient = trpc.createClient({
 });
 
 export { trpc as api };
+
+export function isTRPCClientError(
+  error: unknown,
+): error is TRPCClientError<AppRouter> {
+  return error instanceof TRPCClientError;
+}

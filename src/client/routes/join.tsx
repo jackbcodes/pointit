@@ -5,10 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
-import { ColorModeToggle } from '~/components/color-mode-toggle';
-import { ErrorPage } from '~/components/error-page';
-import { GitHubLink } from '~/components/github-link';
-import { Icons } from '~/components/icons';
+import { Header } from '~/components/header';
 import { Spinner } from '~/components/spinner';
 import { Button } from '~/components/ui/button';
 import {
@@ -37,33 +34,18 @@ export default function Join() {
 
   if (isPlayerInGame) navigate(`/game/${gameId}`, { replace: true });
 
-  if (gameQuery.error || playerQuery.error)
-    return (
-      <ErrorPage
-        code={gameQuery.error?.data?.code || playerQuery.error?.data?.code}
-      />
-    );
-
   return (
     <div className="relative h-screen overflow-hidden bg-background-game">
-      <div className="container">
-        <header className="flex items-center justify-between py-4">
-          <Icons.logo className="h-9" />
-          <div className="flex items-center space-x-2">
-            <GitHubLink />
-            <ColorModeToggle />
-          </div>
-        </header>
+      <Header />
 
-        <div className="mx-auto mt-8 space-y-8 md:w-96">
-          <h1 className="text-center text-2xl font-bold md:text-3xl">
-            Join game
-          </h1>
-          <JoinGameForm
-            playerName={playerQuery.data?.name}
-            isSpectator={playerQuery.data?.isSpectator}
-          />
-        </div>
+      <div className="mx-auto mt-8 space-y-8 md:w-96">
+        <h1 className="text-center text-2xl font-bold md:text-3xl">
+          Join game
+        </h1>
+        <JoinGameForm
+          playerName={playerQuery.data?.name}
+          isSpectator={playerQuery.data?.isSpectator}
+        />
       </div>
     </div>
   );

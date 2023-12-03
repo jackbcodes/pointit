@@ -43,21 +43,23 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface StartGameDialogProps {
   playerName?: string;
+  isLoading: boolean;
 }
 
-export function StartGameDialog({ playerName }: StartGameDialogProps) {
+export function StartGameDialog({
+  playerName,
+  isLoading,
+}: StartGameDialogProps) {
   const navigate = useNavigate();
 
   const createGame = api.game.create.useMutation();
 
-  const defaultValues: Partial<FormValues> = {
-    playerName: playerName ?? '',
-    votingSystemName: 'fibonacci',
-  };
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    values: {
+      playerName: playerName ?? '',
+      votingSystemName: 'fibonacci',
+    },
   });
 
   async function onSubmit(formData: FormValues) {
@@ -84,7 +86,13 @@ export function StartGameDialog({ playerName }: StartGameDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="lg">
+        <Button size="lg" disabled={isLoading}>
+          <Loader2
+            className={cn(
+              'mr-2 h-4 w-4 animate-spin hidden',
+              isLoading && 'block',
+            )}
+          />
           Start game <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </DialogTrigger>

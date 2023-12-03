@@ -1,28 +1,20 @@
-import { TRPC_ERROR_CODE_KEY } from '@trpc/server/rpc';
 import { Home } from 'lucide-react';
+import { useRouteError } from 'react-router-dom';
 
-import { ColorModeToggle } from '~/components/color-mode-toggle';
-import { GitHubLink } from '~/components/github-link';
-import { Icons } from '~/components/icons';
+import { Header } from '~/components/header';
 import { buttonVariants } from '~/components/ui/button';
+import { isTRPCClientError } from '~/utils/api';
 import { cn } from '~/utils/misc';
 
-interface ErrorPageProps {
-  code?: TRPC_ERROR_CODE_KEY;
-}
+export function ErrorBoundary() {
+  const error = useRouteError();
 
-export function ErrorPage({ code }: ErrorPageProps) {
-  const isNotFound = code === 'NOT_FOUND';
+  const isNotFound =
+    isTRPCClientError(error) && error.data?.code === 'NOT_FOUND';
 
   return (
-    <div className="container h-screen">
-      <header className="flex items-center justify-between py-4">
-        <Icons.logo className="h-9" />
-        <div className="flex items-center space-x-2">
-          <GitHubLink />
-          <ColorModeToggle />
-        </div>
-      </header>
+    <div className="h-screen">
+      <Header />
 
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
         <div className="mx-auto max-w-screen-sm text-center">

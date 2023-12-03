@@ -1,12 +1,12 @@
 import { Suspense, lazy } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TRPCClientError } from '@trpc/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { ErrorBoundary } from '~/components/error-boundary';
 import { Spinner } from '~/components/spinner';
 import { ThemeProvider } from '~/components/theme-provider';
-import { TRPCProvider, trpcClient } from '~/utils/api';
+import { TRPCProvider, isTRPCClientError, trpcClient } from '~/utils/api';
 
 const Root = lazy(() => import('~/routes/root'));
 const Join = lazy(() => import('~/routes/join'));
@@ -16,15 +16,17 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorBoundary />,
   },
-
   {
     path: '/join/:gameId',
     element: <Join />,
+    errorElement: <ErrorBoundary />,
   },
   {
     path: '/game/:gameId',
     element: <Game />,
+    errorElement: <ErrorBoundary />,
   },
 ]);
 
@@ -37,7 +39,8 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: (failureCount, error) =>
-        error instanceof TRPCClientError ? false : failureCount === 3,
+        isTRPCClientError(error) ? false : failureCount === 3,
+      useErrorBoundary: true,
     },
   },
 });

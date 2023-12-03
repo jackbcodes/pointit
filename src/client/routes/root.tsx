@@ -1,35 +1,13 @@
-import { ColorModeToggle } from '~/components/color-mode-toggle';
-import { GitHubLink } from '~/components/github-link';
-import { Icons } from '~/components/icons';
-import { Spinner } from '~/components/spinner';
+import { Header } from '~/components/header';
 import { StartGameDialog } from '~/components/start-game-dialog';
-import { useIsScrolled } from '~/hooks/use-is-scrolled';
 import { api } from '~/utils/api';
-import { cn } from '~/utils/misc';
 
 export default function Root() {
-  const isScrolled = useIsScrolled();
-
   const playerQuery = api.player.get.useQuery();
-
-  if (playerQuery.isLoading) return <Spinner />;
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header
-        className={cn(
-          'sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
-          isScrolled && 'border-border border-b',
-        )}
-      >
-        <div className="container flex items-center justify-between py-4">
-          <Icons.logo className="h-9" />
-          <div className="flex items-center space-x-2">
-            <GitHubLink />
-            <ColorModeToggle />
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <section className="flex-1 overflow-x-hidden md:mt-8 lg:mt-10">
         <div className="container flex flex-col gap-8 lg:flex-row">
@@ -44,7 +22,10 @@ export default function Root() {
               Re-energise your agile ceremonies with a fun, user-friendly
               platform for real-time planning poker.
             </p>
-            <StartGameDialog playerName={playerQuery.data?.name} />
+            <StartGameDialog
+              playerName={playerQuery.data?.name}
+              isLoading={playerQuery.isLoading}
+            />
           </div>
           <img
             src="/assets/game-screenshot-light.png"
