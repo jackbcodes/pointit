@@ -68,6 +68,8 @@ jobs:
 
       - name: 🎭 Playwright tests
         run: npx playwright test
+        env:
+          REDIS_URL: redis://redis:6379
 
       - name: 📊 Upload report
         uses: actions/upload-artifact@v3
