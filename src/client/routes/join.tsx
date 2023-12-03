@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import { ColorModeToggle } from '~/components/color-mode-toggle';
+import { ErrorPage } from '~/components/error-page';
 import { GitHubLink } from '~/components/github-link';
 import { Icons } from '~/components/icons';
 import { Spinner } from '~/components/spinner';
@@ -27,13 +28,21 @@ export default function Join() {
   const { gameId } = useParams();
   const navigate = useNavigate();
 
+  const gameQuery = api.game.getById.useQuery(gameId!);
   const playerQuery = api.player.get.useQuery();
-
-  if (playerQuery.isLoading) return <Spinner />;
 
   const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
 
+  if (gameQuery.isLoading || playerQuery.isLoading) return <Spinner />;
+
   if (isPlayerInGame) navigate(`/game/${gameId}`, { replace: true });
+
+  if (gameQuery.error || playerQuery.error)
+    return (
+      <ErrorPage
+        code={gameQuery.error?.data?.code || playerQuery.error?.data?.code}
+      />
+    );
 
   return (
     <div className="relative h-screen overflow-hidden bg-background-game">
