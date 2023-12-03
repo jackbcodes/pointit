@@ -35,6 +35,7 @@ export function Sidebar() {
   const player = usePlayer();
 
   const toggleSpectatorMode = api.player.toggleSpectatorMode.useMutation();
+  const vote = api.player.vote.useMutation();
 
   const spectators = useMemo(
     () => game.players.filter(({ isSpectator }) => isSpectator),
@@ -43,7 +44,7 @@ export function Sidebar() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 space-y-6 overflow-hidden">
+      <div className="flex-1 space-y-6 overflow-y-hidden">
         <Icons.logo className="h-9" />
         <div className="space-y-1">
           <ChangeNameDialog playerName={player.name} />
@@ -51,9 +52,10 @@ export function Sidebar() {
             className="w-full justify-start px-4"
             aria-label="Toggle player mode"
             pressed={player.isSpectator}
-            onPressedChange={async () =>
-              await toggleSpectatorMode.mutateAsync()
-            }
+            onPressedChange={async () => {
+              await toggleSpectatorMode.mutateAsync();
+              if (player.vote) await vote.mutateAsync();
+            }}
           >
             <Eye className="mr-2 h-4 w-4" />
             Spectator mode
