@@ -21,7 +21,7 @@ jobs:
       - name: 🛠️ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -35,7 +35,7 @@ jobs:
   playwright:
     name: 🎭 Playwright
     runs-on: ubuntu-latest
-    container: node:18-bookworm-slim
+    container: node:20-bookworm-slim
     services:
       redis:
         image: redis
@@ -55,7 +55,7 @@ jobs:
       - name: 🛠️ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
