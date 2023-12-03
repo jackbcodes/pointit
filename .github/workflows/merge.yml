@@ -68,6 +68,8 @@ jobs:
 
       - name: 🏎️ Start server
         run: npm run start &
+        env:
+          REDIS_URL: redis://redis:6379
 
       - name: 🎭 Playwright tests
         run: npx playwright test
