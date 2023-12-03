@@ -3,6 +3,8 @@ import { createSigner, createVerifier } from 'fast-jwt';
 
 import type { JwtPayload } from '~/utils/schemas';
 
+import { USER_EXPIRATION_TIME } from './misc';
+
 export const AUTH_COOKIE_NAME = '_pointit_id';
 
 const signer = createSigner({ key: process.env.AUTH_SECRET });
@@ -29,6 +31,6 @@ export function setAuthCookie(playerId: string, res: Response) {
     secure: true,
     httpOnly: true,
     sameSite: 'strict',
-    maxAge: 1000 * 60 * 60 * 24 * 30,
+    maxAge: 1000 * USER_EXPIRATION_TIME,
   });
 }

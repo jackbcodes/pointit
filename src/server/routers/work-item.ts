@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
+import { KEY_EXPIRATION_TIME } from '~/utils/misc';
 import { redis } from '~/utils/redis';
 import { workItemSchema } from '~/utils/schemas';
 import { createTRPCRouter, protectedProcedure } from '~/utils/trpc';
@@ -10,6 +11,10 @@ export const workItemRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         await redis.hset(`work-item:${ctx.player.gameId}`, input);
+        await redis.expire(
+          `work-item:${ctx.player.gameId}`,
+          KEY_EXPIRATION_TIME,
+        );
 
         await redis.publish(
           `game:${ctx.player.gameId}`,

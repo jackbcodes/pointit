@@ -1,6 +1,10 @@
 import { TRPCError } from '@trpc/server';
 
-import { stringifyObject } from '~/utils/misc';
+import {
+  KEY_EXPIRATION_TIME,
+  USER_EXPIRATION_TIME,
+  stringifyObject,
+} from '~/utils/misc';
 import { getPlayersById, publishUpdatedPlayers } from '~/utils/player';
 import { redis } from '~/utils/redis';
 import { fullGameSchema, gameSchema } from '~/utils/schemas';
@@ -24,6 +28,10 @@ export async function createGame({
       .sadd(`players:${game.id}`, player.id)
       .hset(`player:${player.id}`, stringifyObject(player))
       .hset(`voting-system:${game.id}`, stringifyObject(votingSystem))
+      .expire(`game:${game.id}`, KEY_EXPIRATION_TIME)
+      .expire(`players:${game.id}`, KEY_EXPIRATION_TIME)
+      .expire(`player:${player.id}`, USER_EXPIRATION_TIME)
+      .expire(`voting-system:${game.id}`, KEY_EXPIRATION_TIME)
       .exec();
   } catch (error) {
     console.log(error);
@@ -42,6 +50,7 @@ export async function joinGame({ gameId, player }: JoinGameArgs) {
       .multi()
       .sadd(`players:${gameId}`, player.id)
       .hset(`player:${player.id}`, stringifyObject(player))
+      .expire(`player:${player.id}`, USER_EXPIRATION_TIME)
       .exec();
 
     await publishUpdatedPlayers(gameId);
