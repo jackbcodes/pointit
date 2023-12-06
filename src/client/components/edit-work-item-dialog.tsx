@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { Textarea } from '~/components/ui/textarea';
 import { api } from '~/utils/api';
 import { cn, emptyStringToUndefined } from '~/utils/misc';
 
@@ -120,7 +121,7 @@ export function EditWorkItemDialog({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Textarea {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

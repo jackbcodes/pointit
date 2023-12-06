@@ -94,18 +94,20 @@ export default function Game() {
           <Sidebar />
         </aside>
 
-        <main className="flex min-h-screen flex-col items-center justify-between p-4 pb-8 pt-24 lg:ml-72 lg:pt-8">
-          <div className="absolute right-8 top-4 hidden space-x-2 md:block">
-            <GitHubLink />
-            <ColorModeToggle />
-          </div>
-          <div className="grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-5">
-            <Voters />
-            <img
-              src="/assets/table.png"
-              className="col-span-4 col-start-2 row-span-2 row-start-2"
-              alt="table"
-            />
+        <main className="flex min-h-screen flex-col items-center p-4 pb-8 pt-24 lg:ml-72 lg:pt-4">
+          <div className="flex w-full flex-1 flex-col">
+            <div className="hidden justify-end gap-2 pr-2 md:flex">
+              <GitHubLink />
+              <ColorModeToggle />
+            </div>
+            <div className="mx-auto grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-5">
+              <Voters />
+              <img
+                src="/images/table.png"
+                className="col-span-4 col-start-2 row-span-2 row-start-2"
+                alt="table"
+              />
+            </div>
           </div>
           {gameQuery.data?.isRevealed ? <Results /> : <VotePicker />}
         </main>

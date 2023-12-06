@@ -6,18 +6,18 @@ import { useGame } from '~/hooks/use-game';
 import { cn } from '~/utils/misc';
 
 const POSITIONS = [
-  ['col-start-2', 'row-start-1', 'rotate-0', '-bottom-10'],
-  ['col-start-2', 'row-start-4', 'rotate-180', '-top-10'],
   ['col-start-3', 'row-start-1', 'rotate-0', '-bottom-10'],
   ['col-start-3', 'row-start-4', 'rotate-180', '-top-10'],
   ['col-start-4', 'row-start-1', 'rotate-0', '-bottom-10'],
   ['col-start-4', 'row-start-4', 'rotate-180', '-top-10'],
-  ['col-start-5', 'row-start-1', 'rotate-0', '-bottom-10'],
-  ['col-start-5', 'row-start-4', 'rotate-180', '-top-10'],
   ['col-start-1', 'row-start-2', '-rotate-90', '-right-6 top-6'],
   ['col-start-6', 'row-start-2', 'rotate-90', '-left-6 top-6'],
   ['col-start-1', 'row-start-3', '-rotate-90', '-right-6'],
   ['col-start-6', 'row-start-3', 'rotate-90', '-left-6'],
+  ['col-start-2', 'row-start-1', 'rotate-0', '-bottom-10'],
+  ['col-start-2', 'row-start-4', 'rotate-180', '-top-10'],
+  ['col-start-5', 'row-start-1', 'rotate-0', '-bottom-10'],
+  ['col-start-5', 'row-start-4', 'rotate-180', '-top-10'],
   ['col-start-1', 'row-start-1', '-rotate-45', 'right-0'],
   ['col-start-1', 'row-start-4', '-rotate-[135deg]', 'right-0'],
   ['col-start-6', 'row-start-1', 'rotate-45', 'left-0'],

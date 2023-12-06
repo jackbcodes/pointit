@@ -1,8 +1,11 @@
 import { Header } from '~/components/header';
 import { StartGameDialog } from '~/components/start-game-dialog';
+import { useTheme } from '~/hooks/use-theme';
 import { api } from '~/utils/api';
 
 export default function Root() {
+  const { theme } = useTheme();
+
   const playerQuery = api.player.get.useQuery();
 
   return (
@@ -28,8 +31,12 @@ export default function Root() {
             />
           </div>
           <img
-            src="/assets/game-screenshot-light.png"
-            className="relative -me-80 mb-16 rounded shadow-xl lg:w-[40rem] xl:w-[50rem]"
+            src={
+              theme === 'light'
+                ? '/images/game-screen-light.png'
+                : '/images/game-screen-dark.png'
+            }
+            className="relative -me-80 mb-16 rounded-lg shadow-xl lg:w-[40rem] xl:w-[60rem]"
             alt="mockup"
           />
         </div>
