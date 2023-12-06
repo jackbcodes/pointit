@@ -11,7 +11,7 @@ router.get('/game/:gameId/subscribe', async (req, res) => {
   const { gameId } = req.params;
 
   const gameExists = Boolean(await redis.exists(`game:${gameId}`));
-  if (!gameExists) return res.status(400).send('NOT_FOUND');
+  if (!gameExists) return res.status(404).send('NOT_FOUND');
 
   const user = await authenticate(req);
   if (!user) return res.status(401).send('UNAUTHORIZED');
