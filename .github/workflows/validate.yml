@@ -38,7 +38,7 @@ jobs:
     container: node:20-bookworm-slim
     services:
       redis:
-        image: redis
+        image: redis/redis-stack-server:latest
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
