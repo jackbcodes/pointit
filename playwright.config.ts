@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
 
-const PORT = process.env.PORT ?? '3000';
+const PORT = process.env.PORT ?? '8080';
 const REDIS_URL = process.env.REDIS_URL ?? '6379';
 
 export default defineConfig({

@@ -10,7 +10,7 @@ import ViteExpress from 'vite-express';
 import { appRouter, subscribeRouter } from '~/routers';
 import { createContext } from '~/utils/trpc';
 
-const PORT = process.env.PORT ?? '3000';
+const PORT = process.env.PORT ?? '8080';
 
 const app = express();
 
