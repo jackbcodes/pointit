@@ -44,7 +44,7 @@ export function Sidebar() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 space-y-6 overflow-y-hidden">
+      <div className="flex-1 space-y-6">
         <Icons.logo className="h-9" />
         <div className="space-y-1">
           <ChangeNameDialog playerName={player.name} />

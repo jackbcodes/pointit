@@ -94,13 +94,13 @@ export default function Game() {
           <Sidebar />
         </aside>
 
-        <main className="flex min-h-screen flex-col items-center p-4 pb-8 pt-24 lg:ml-72 lg:pt-4">
+        <main className="flex min-h-screen flex-col items-center gap-8 p-4 pb-8 pt-24 lg:ml-72 lg:pt-4">
           <div className="flex w-full flex-1 flex-col">
-            <div className="hidden justify-end gap-2 pr-2 md:flex">
+            <div className="hidden justify-end gap-2 pr-2 lg:flex">
               <GitHubLink />
               <ColorModeToggle />
             </div>
-            <div className="mx-auto grid max-w-xl grid-cols-6 grid-rows-4 items-center gap-5">
+            <div className="mx-auto grid max-w-lg grid-cols-6 grid-rows-4 items-center gap-5 xl:max-w-xl">
               <Voters />
               <img
                 src="/images/table.png"
