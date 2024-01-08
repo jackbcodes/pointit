@@ -47,6 +47,11 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
+  console.log('PostHog', {
+    api_key: import.meta.env.VITE_POSTHOG_KEY,
+    api_host: import.meta.env.VITE_POSTHOG_HOST,
+  });
+
   return (
     <PostHogProvider
       apiKey={import.meta.env.VITE_POSTHOG_KEY}
