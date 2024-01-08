@@ -52,6 +52,11 @@ export default function App() {
     api_host: import.meta.env.VITE_POSTHOG_HOST,
   });
 
+  console.log('process.env', {
+    api_key: process.env.VITE_POSTHOG_KEY,
+    api_host: process.env.VITE_POSTHOG_HOST,
+  });
+
   return (
     <PostHogProvider
       apiKey={import.meta.env.VITE_POSTHOG_KEY}
