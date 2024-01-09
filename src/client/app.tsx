@@ -47,20 +47,10 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
-  console.log('PostHog', {
-    api_key: import.meta.env.VITE_POSTHOG_KEY,
-    api_host: import.meta.env.VITE_POSTHOG_HOST,
-  });
-
-  console.log('process.env', {
-    api_key: process.env.VITE_POSTHOG_KEY,
-    api_host: process.env.VITE_POSTHOG_HOST,
-  });
-
   return (
     <PostHogProvider
-      apiKey={import.meta.env.VITE_POSTHOG_KEY}
-      options={{ api_host: import.meta.env.VITE_POSTHOG_HOST }}
+      apiKey="phc_vt1TvZIanVIAYEWKvIBg7PMx0avVWPaQiQvuQReXv3g"
+      options={{ api_host: 'https://app.posthog.com' }}
     >
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <TRPCProvider client={trpcClient} queryClient={queryClient}>
