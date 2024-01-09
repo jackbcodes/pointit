@@ -1,7 +1,6 @@
 import { Suspense, lazy } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PostHogProvider } from 'posthog-js/react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { ErrorBoundary } from '~/components/error-boundary';
@@ -47,25 +46,15 @@ const queryClient = new QueryClient({
 });
 
 export default function App() {
-  console.log('PostHog', {
-    api_key: import.meta.env.VITE_POSTHOG_KEY,
-    api_host: import.meta.env.VITE_POSTHOG_HOST,
-  });
-
   return (
-    <PostHogProvider
-      apiKey={import.meta.env.VITE_POSTHOG_KEY}
-      options={{ api_host: import.meta.env.VITE_POSTHOG_HOST }}
-    >
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <TRPCProvider client={trpcClient} queryClient={queryClient}>
-          <QueryClientProvider client={queryClient}>
-            <Suspense fallback={<Spinner />}>
-              <RouterProvider router={router} />
-            </Suspense>
-          </QueryClientProvider>
-        </TRPCProvider>
-      </ThemeProvider>
-    </PostHogProvider>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <TRPCProvider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <Suspense fallback={<Spinner />}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </QueryClientProvider>
+      </TRPCProvider>
+    </ThemeProvider>
   );
 }
