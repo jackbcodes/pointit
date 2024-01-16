@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "commit": "commit",
     "dev": "nodemon --exec \"tsx --tsconfig ./tsconfig.node.json\" src/server/main.ts -w",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -52,6 +53,9 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "@commitlint/prompt-cli": "^18.4.4",
     "@faker-js/faker": "^8.3.1",
     "@playwright/test": "^1.40.1",
     "@types/cookie-parser": "^1.4.6",
@@ -75,6 +79,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "eslint-plugin-unicorn": "^49.0.0",
+    "husky": "^8.0.3",
     "nodemon": "^3.0.1",
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
