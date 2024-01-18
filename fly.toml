@@ -16,6 +16,11 @@ primary_region = "lhr"
   min_machines_running = 1
   processes = ["app"]
 
+[http_service.concurrency]
+  hard_limit = 100
+  soft_limit = 80
+  type = "requests"
+
 [[vm]]
   cpu_kind = "shared"
   cpus = 1

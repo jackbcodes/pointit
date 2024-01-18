@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "prepare": "husky install",
     "start": "NODE_ENV=production tsx --tsconfig ./tsconfig.node.json src/server/main.ts",
     "test:e2e": "playwright test --ui",
     "typecheck": "tsc"
