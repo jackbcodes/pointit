@@ -18,7 +18,9 @@ export async function getPlayerById(id: string) {
 export async function getPlayersById(ids: string[]) {
   const players = await Promise.all(ids.map((id) => getPlayerById(id)));
 
-  return players.filter(Boolean);
+  return players
+    .filter(Boolean)
+    .sort((a, b) => a.joinedAt.getTime() - b.joinedAt.getTime());
 }
 
 export async function getPlayersByGameId(gameId: string) {
