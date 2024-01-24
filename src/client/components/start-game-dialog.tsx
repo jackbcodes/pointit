@@ -24,6 +24,7 @@ import {
 } from '~/components/ui/dialog';
 import { Input } from '~/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
+import { useToast } from '~/components/ui/use-toast';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
 
@@ -51,6 +52,7 @@ export function StartGameDialog({
   isLoading,
 }: StartGameDialogProps) {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const createGame = api.game.create.useMutation();
 
@@ -74,11 +76,13 @@ export function StartGameDialog({
 
       navigate(`/game/${gameId}`);
     } catch (error) {
-      form.setError('root.serverError', {
-        message:
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description:
           error instanceof TRPCClientError
             ? error.message
-            : 'There was an error joining the game, please try again',
+            : 'There was an error starting the game, please try again',
       });
     }
   }

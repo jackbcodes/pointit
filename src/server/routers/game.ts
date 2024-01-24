@@ -75,9 +75,13 @@ export const gameRouter = createTRPCRouter({
 
       if (!token?.id) setAuthCookie(userId, ctx.res);
 
-      const playerCount = await redis.scard(`players:${input.gameId}`);
+      const [playerCount] = (await redis.call(
+        'JSON.ARRLEN',
+        keys.game(input.gameId),
+        '$.players',
+      )) as [number];
 
-      if (playerCount >= 16) {
+      if (playerCount >= 1) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message:

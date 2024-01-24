@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorBoundary } from '~/components/error-boundary';
 import { Spinner } from '~/components/spinner';
 import { ThemeProvider } from '~/components/theme-provider';
+import { Toaster } from '~/components/ui/toaster';
 import { TRPCProvider, isTRPCClientError, trpcClient } from '~/utils/api';
 
 const Root = lazy(() => import('~/routes/root'));
@@ -52,6 +53,7 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <Suspense fallback={<Spinner />}>
             <RouterProvider router={router} />
+            <Toaster />
           </Suspense>
         </QueryClientProvider>
       </TRPCProvider>
