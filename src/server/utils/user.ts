@@ -5,7 +5,7 @@ import { userSchema } from '~/utils/schemas';
 
 export async function getUserById(id: string) {
   const value = await redis.call('JSON.GET', keys.user(id), '$');
-  if (!value) throw new TRPCError({ code: 'NOT_FOUND' });
+  if (!value) return;
 
   const [user] = JSON.parse(value as string) as unknown[];
 
