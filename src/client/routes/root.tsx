@@ -6,7 +6,7 @@ import { api } from '~/utils/api';
 export default function Root() {
   const { theme } = useTheme();
 
-  const playerQuery = api.player.get.useQuery();
+  const userQuery = api.user.get.useQuery();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -26,8 +26,8 @@ export default function Root() {
               platform for real-time planning poker.
             </p>
             <StartGameDialog
-              playerName={playerQuery.data?.name}
-              isLoading={playerQuery.isLoading}
+              playerName={userQuery.data?.name}
+              isLoading={userQuery.isLoading}
             />
           </div>
           <img

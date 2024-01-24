@@ -3,11 +3,7 @@ import { z } from 'zod';
 
 // Redis transformations
 
-const stringToBoolean = z.preprocess(
-  (value) => (typeof value === 'string' ? JSON.parse(value) : value),
-  z.boolean(),
-);
-
+// TODO: Is this needed now? Probs not
 const emptyStringToUndefined = z.preprocess(
   (value) => (value === '' ? undefined : value),
   z.string().optional(),
@@ -25,10 +21,7 @@ export type JwtPayload = z.infer<typeof jwtPayloadSchema>;
 
 export const votingSystemSchema = z.object({
   name: z.string(),
-  values: z.preprocess(
-    (value) => (typeof value === 'string' ? JSON.parse(value) : value),
-    z.array(z.string()),
-  ),
+  values: z.array(z.string()),
 });
 
 export type VotingSystem = z.infer<typeof votingSystemSchema>;
@@ -43,17 +36,25 @@ export const workItemSchema = z.object({
 
 export type WorkItem = z.infer<typeof workItemSchema>;
 
-// Player
+// User
 
-export const playerSchema = z.object({
+export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
   gameId: z.string(),
-  vote: z.string(),
-  isSpectator: stringToBoolean,
-  joinedAt: z.coerce.date(),
-  createdAt: z.coerce.date(),
+  isSpectator: z.boolean(),
 });
+
+export type User = z.infer<typeof userSchema>;
+
+// Player
+
+export const playerSchema = userSchema.merge(
+  z.object({
+    vote: z.string(),
+    joinedAt: z.coerce.date(),
+  }),
+);
 
 export type Player = z.infer<typeof playerSchema>;
 
@@ -61,7 +62,13 @@ export type Player = z.infer<typeof playerSchema>;
 
 export const gameSchema = z.object({
   id: z.string(),
-  isRevealed: stringToBoolean,
+  isRevealed: z.boolean(),
+  players: z.array(playerSchema),
+  votingSystem: votingSystemSchema,
+  workItem: z.preprocess(
+    (value) => (isEmpty(value) ? undefined : value),
+    workItemSchema.optional(),
+  ),
 });
 
 export type Game = z.infer<typeof gameSchema>;

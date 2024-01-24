@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
-import { KEY_EXPIRATION_TIME } from '~/utils/misc';
-import { redis } from '~/utils/redis';
+import { keys, redis } from '~/utils/redis';
 import { workItemSchema } from '~/utils/schemas';
 import { createTRPCRouter, protectedProcedure } from '~/utils/trpc';
 
@@ -10,14 +9,15 @@ export const workItemRouter = createTRPCRouter({
     .input(workItemSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        await redis.hset(`work-item:${ctx.player.gameId}`, input);
-        await redis.expire(
-          `work-item:${ctx.player.gameId}`,
-          KEY_EXPIRATION_TIME,
+        await redis.call(
+          'JSON.SET',
+          keys.game(ctx.user.gameId),
+          '$.workItem',
+          JSON.stringify(input),
         );
 
         await redis.publish(
-          `game:${ctx.player.gameId}`,
+          keys.game(ctx.user.gameId),
           JSON.stringify({ workItem: input }),
         );
       } catch (error) {
@@ -28,10 +28,10 @@ export const workItemRouter = createTRPCRouter({
 
   remove: protectedProcedure.mutation(async ({ ctx }) => {
     try {
-      await redis.del(`work-item:${ctx.player.gameId}`);
+      await redis.call('JSON.DEL', keys.game(ctx.user.gameId), '$.workItem');
 
       await redis.publish(
-        `game:${ctx.player.gameId}`,
+        keys.game(ctx.user.gameId),
         JSON.stringify({ workItem: {} }),
       );
     } catch (error) {

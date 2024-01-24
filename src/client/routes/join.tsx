@@ -26,13 +26,13 @@ export default function Join() {
   const navigate = useNavigate();
 
   const gameQuery = api.game.getById.useQuery(gameId!);
-  const playerQuery = api.player.get.useQuery();
+  const userQuery = api.user.get.useQuery();
 
-  const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
+  const isUserInGame = Boolean(gameId === userQuery.data?.gameId);
 
-  if (gameQuery.isLoading || playerQuery.isLoading) return <Spinner />;
+  if (gameQuery.isLoading || userQuery.isLoading) return <Spinner />;
 
-  if (isPlayerInGame) navigate(`/game/${gameId}`, { replace: true });
+  if (isUserInGame) navigate(`/game/${gameId}`, { replace: true });
 
   return (
     <div className="relative h-screen overflow-hidden bg-background-game">
@@ -43,8 +43,8 @@ export default function Join() {
           Join game
         </h1>
         <JoinGameForm
-          playerName={playerQuery.data?.name}
-          isSpectator={playerQuery.data?.isSpectator}
+          playerName={userQuery.data?.name}
+          isSpectator={userQuery.data?.isSpectator}
         />
       </div>
     </div>

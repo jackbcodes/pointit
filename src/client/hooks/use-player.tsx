@@ -1,8 +1,17 @@
+import { useMemo } from 'react';
+
+import { useGame } from '~/hooks/use-game';
 import { api } from '~/utils/api';
 
-// Use only where we know player data must exists i.e. not on game page
+// Use only where we know game and user data must exists i.e. not on game.tsx
 export function usePlayer() {
-  const playerQuery = api.player.get.useQuery();
+  const userQuery = api.user.get.useQuery();
+  const game = useGame();
 
-  return playerQuery.data!;
+  const player = useMemo(
+    () => game.players.find((player) => player.id === userQuery.data!.id),
+    [game.players, userQuery.data],
+  );
+
+  return player!;
 }

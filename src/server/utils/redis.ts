@@ -18,4 +18,16 @@ redis.on('error', (error) => {
   console.log('Something went wrong', error);
 });
 
+export const keys = {
+  game: (id: string) => `game:${id}`,
+  user: (id: string) => `user:${id}`,
+};
+
+export const paths = {
+  player: (id: string, property?: string) =>
+    `$.players[?(@.id=="${id}")]${property ? `.${property}` : ''}`,
+  players: (property?: string) =>
+    `$.players${property ? `[*].${property}` : ''}`,
+};
+
 export { redis };

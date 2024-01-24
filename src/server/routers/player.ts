@@ -1,26 +1,25 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { publishUpdatedGame } from '~/utils/game';
-import { publishUpdatedPlayers } from '~/utils/player';
-import { redis } from '~/utils/redis';
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from '~/utils/trpc';
+import { keys, redis, paths } from '~/utils/redis';
+import { createTRPCRouter, protectedProcedure } from '~/utils/trpc';
 
 export const playerRouter = createTRPCRouter({
-  // eslint-disable-next-line unicorn/no-null -- react-query doesn't allow sending undefined
-  get: publicProcedure.query(({ ctx }) => ctx.player ?? null),
-
   vote: protectedProcedure
     .input(z.string().optional())
     .mutation(async ({ ctx, input }) => {
       try {
-        await redis.hset(`player:${ctx.player.id}`, 'vote', input ?? '');
+        await redis.call(
+          'JSON.SET',
+          keys.game(ctx.user.gameId),
+          paths.player(ctx.user.id, 'vote'),
+          `"${input}"`,
+        );
 
-        await publishUpdatedPlayers(ctx.player.gameId);
+        await redis.publish(
+          keys.game(ctx.user.gameId),
+          JSON.stringify({ player: { id: ctx.user.id, vote: input } }),
+        );
       } catch (error) {
         console.log(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
@@ -29,18 +28,26 @@ export const playerRouter = createTRPCRouter({
 
   toggleSpectatorMode: protectedProcedure.mutation(async ({ ctx }) => {
     try {
-      const prevValue = await redis.hget(
-        `player:${ctx.player.id}`,
-        'isSpectator',
-      );
+      const response = await redis
+        .multi()
+        .call(
+          'JSON.TOGGLE',
+          keys.game(ctx.user.gameId),
+          paths.player(ctx.user.id, 'isSpectator'),
+        )
+        .call('JSON.TOGGLE', keys.user(ctx.user.id), `$.isSpectator`)
+        .exec();
 
-      await redis.hset(
-        `player:${ctx.player.id}`,
-        'isSpectator',
-        String(prevValue === 'false'),
-      );
+      if (!response) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
 
-      await publishUpdatedPlayers(ctx.player.gameId);
+      const [[, result]] = response as [Error | null, boolean[]][];
+
+      const isSpectator = Boolean(result[0]);
+
+      await redis.publish(
+        keys.game(ctx.user.gameId),
+        JSON.stringify({ player: { id: ctx.user.id, isSpectator } }),
+      );
     } catch (error) {
       console.log(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
@@ -51,9 +58,21 @@ export const playerRouter = createTRPCRouter({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       try {
-        await redis.hset(`player:${ctx.player.id}`, 'name', input);
+        await redis
+          .multi()
+          .call(
+            'JSON.SET',
+            keys.game(ctx.user.gameId),
+            paths.player(ctx.user.id, 'name'),
+            `"${input}"`,
+          )
+          .call('JSON.SET', keys.user(ctx.user.id), `$.name`, `"${input}"`)
+          .exec();
 
-        await publishUpdatedPlayers(ctx.player.gameId);
+        await redis.publish(
+          keys.game(ctx.user.gameId),
+          JSON.stringify({ player: { id: ctx.user.id, name: input } }),
+        );
       } catch (error) {
         console.log(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
@@ -62,25 +81,16 @@ export const playerRouter = createTRPCRouter({
 
   leaveGame: protectedProcedure.mutation(async ({ ctx }) => {
     try {
-      await Promise.all([
-        redis.hset(`player:${ctx.player.id}`, 'gameId', '', 'vote', ''),
-        redis.srem(`players:${ctx.player.gameId}`, ctx.player.id),
-      ]);
+      await redis
+        .multi()
+        .call('JSON.DEL', keys.game(ctx.user.gameId), paths.player(ctx.user.id))
+        .call('JSON.SET', keys.user(ctx.user.id), `$.gameId`, '""')
+        .exec();
 
-      await Promise.all([
-        publishUpdatedPlayers(ctx.player.gameId),
-        publishUpdatedGame(ctx.player.gameId),
-      ]);
-
-      const exists = Boolean(
-        await redis.exists(`players:${ctx.player.gameId}`),
+      await redis.publish(
+        keys.game(ctx.user.gameId),
+        JSON.stringify({ isLeaveGame: true, id: ctx.user.id }),
       );
-
-      if (!exists)
-        await redis.del(
-          `game:${ctx.player.gameId}`,
-          `voting-system:${ctx.player.gameId}`,
-        );
     } catch (error) {
       console.log(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });

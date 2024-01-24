@@ -1,25 +1,23 @@
 import { Router } from 'express';
 
 import { authenticate } from '~/utils/auth';
-import { getFullGameById } from '~/utils/game';
-import { getPlayerById } from '~/utils/player';
-import { redis } from '~/utils/redis';
+import { getGameById } from '~/utils/game';
+import { keys, paths, redis } from '~/utils/redis';
 
 const router = Router();
 
 router.get('/game/:gameId/subscribe', async (req, res) => {
   const { gameId } = req.params;
 
-  const gameExists = Boolean(await redis.exists(`game:${gameId}`));
-  if (!gameExists) return res.status(404).send('NOT_FOUND');
+  const token = await authenticate(req);
+  if (!token) return res.status(401).send('UNAUTHORIZED');
 
-  const user = await authenticate(req);
-  if (!user) return res.status(401).send('UNAUTHORIZED');
+  const exists = await Boolean(await redis.exists(keys.user(token.id)));
+  if (!exists) return res.status(401).send('UNAUTHORIZED');
 
-  const player = await getPlayerById(user.id);
-  if (!player) return res.status(401).send('UNAUTHORIZED');
-
-  const isPlayerInGame = await redis.sismember(`players:${gameId}`, player.id);
+  const isPlayerInGame = await Boolean(
+    redis.call('JSON.GET', keys.game(gameId), paths.player(token.id)),
+  );
   if (!isPlayerInGame) return res.status(401).send('UNAUTHORIZED');
 
   const headers = {
@@ -32,13 +30,13 @@ router.get('/game/:gameId/subscribe', async (req, res) => {
 
   const subscriber = redis.duplicate();
 
-  await subscriber.subscribe(`game:${gameId}`);
+  await subscriber.subscribe(keys.game(gameId));
 
   const onMessage = (_channel: string, message: string) => {
     res.write(`data: ${JSON.stringify(JSON.parse(message))}\n\n`);
   };
 
-  const game = await getFullGameById(gameId);
+  const game = await getGameById(gameId);
   subscriber.on('message', onMessage);
 
   res.write(`event: subscribed\n`);

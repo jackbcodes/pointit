@@ -2,6 +2,7 @@ import { createTRPCRouter } from '~/utils/trpc';
 
 import { gameRouter } from './game';
 import { playerRouter } from './player';
+import { userRouter } from './user';
 import { workItemRouter } from './work-item';
 
 /**
@@ -10,8 +11,9 @@ import { workItemRouter } from './work-item';
  * All routers added in /server/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  player: playerRouter,
+  user: userRouter,
   game: gameRouter,
+  player: playerRouter,
   workItem: workItemRouter,
 });
 

@@ -181,7 +181,7 @@ function LeaveGameAlertDialog(props: ButtonProps) {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              await leaveGame.mutateAsync();
+              leaveGame.mutate();
               navigate('/');
             }}
           >

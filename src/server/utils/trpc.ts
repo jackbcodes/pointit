@@ -4,18 +4,17 @@ import superjson from 'superjson';
 import { ZodError } from 'zod';
 
 import { authenticate } from '~/utils/auth';
-import { getPlayerById } from '~/utils/player';
+import { getUserById } from '~/utils/user';
 
 export const createContext = async ({
   req,
   res,
 }: CreateExpressContextOptions) => {
-  const user = await authenticate(req);
+  const token = await authenticate(req);
+  if (!token) return { req, res, user: undefined };
 
-  if (!user) return { req, res, player: undefined };
-
-  const player = await getPlayerById(user.id);
-  return { req, res, player };
+  const user = await getUserById(token.id);
+  return { req, res, user };
 };
 
 const t = initTRPC.context<typeof createContext>().create({
@@ -37,11 +36,11 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.player) throw new TRPCError({ code: 'UNAUTHORIZED' });
+  if (!ctx.user) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
   return next({
     ctx: {
-      player: ctx.player,
+      user: ctx.user,
     },
   });
 });

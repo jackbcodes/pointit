@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { PanelLeftOpen } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -13,54 +11,21 @@ import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
 import { VotePicker } from '~/components/vote-picker';
 import { Voters } from '~/components/voters';
+import { useEventSource } from '~/hooks/use-event-source';
 import { api } from '~/utils/api';
 
 export default function Game() {
+  useEventSource();
+
   const { gameId } = useParams();
   const navigate = useNavigate();
 
-  const playerQuery = api.player.get.useQuery();
+  const userQuery = api.user.get.useQuery();
   const gameQuery = api.game.getById.useQuery(gameId!);
-  const utils = api.useUtils();
 
-  const isPlayerInGame = Boolean(gameId === playerQuery.data?.gameId);
+  const isPlayerInGame = Boolean(gameId === userQuery.data?.gameId);
 
-  useEffect(() => {
-    if (!isPlayerInGame) return;
-
-    const evtSource = new EventSource(`/api/game/${gameId}/subscribe`);
-
-    const handleSubscribed = async (event: MessageEvent) => {
-      utils.game.getById.setData(gameId!, JSON.parse(event.data));
-    };
-
-    const handleMessage = async (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
-
-      utils.game.getById.setData(gameId!, (prevData) => ({
-        ...prevData,
-        ...JSON.parse(event.data),
-      }));
-
-      const currentPlayer = data.players.find(
-        (player) => player.id === playerQuery.data?.id,
-      );
-
-      if (currentPlayer) utils.player.get.setData(undefined, currentPlayer);
-    };
-
-    evtSource.addEventListener('subscribed', handleSubscribed);
-    evtSource.addEventListener('message', handleMessage);
-
-    return () => {
-      evtSource.removeEventListener('subscribed', handleSubscribed);
-      evtSource.removeEventListener('message', handleMessage);
-      evtSource.close();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlayerInGame]);
-
-  if (gameQuery.data && playerQuery.data !== undefined) {
+  if (gameQuery.data && userQuery.data !== undefined) {
     if (!isPlayerInGame) {
       navigate(`/join/${gameId}`, { replace: true });
       return;
