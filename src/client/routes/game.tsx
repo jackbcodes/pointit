@@ -14,7 +14,7 @@ import { Voters } from '~/components/voters';
 import { useEventSource } from '~/hooks/use-event-source';
 import { api } from '~/utils/api';
 
-export default function Game() {
+export function Component() {
   useEventSource();
 
   const { gameId } = useParams();
@@ -82,3 +82,5 @@ export default function Game() {
 
   return <Spinner />;
 }
+
+Component.displayName = 'GameRoute';

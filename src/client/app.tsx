@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -9,25 +9,21 @@ import { ThemeProvider } from '~/components/theme-provider';
 import { Toaster } from '~/components/ui/toaster';
 import { TRPCProvider, isTRPCClientError, trpcClient } from '~/utils/api';
 
-const Root = lazy(() => import('~/routes/root'));
-const Join = lazy(() => import('~/routes/join'));
-const Game = lazy(() => import('~/routes/game'));
-
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
     errorElement: <ErrorBoundary />,
+    lazy: () => import('~/routes/root'),
   },
   {
     path: '/join/:gameId',
-    element: <Join />,
     errorElement: <ErrorBoundary />,
+    lazy: () => import('~/routes/join'),
   },
   {
     path: '/game/:gameId',
-    element: <Game />,
     errorElement: <ErrorBoundary />,
+    lazy: () => import('~/routes/game'),
   },
 ]);
 

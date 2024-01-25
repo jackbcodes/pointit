@@ -3,7 +3,7 @@ import { StartGameDialog } from '~/components/start-game-dialog';
 import { useTheme } from '~/hooks/use-theme';
 import { api } from '~/utils/api';
 
-export default function Root() {
+export function Component() {
   const { theme } = useTheme();
 
   const userQuery = api.user.get.useQuery();
@@ -59,3 +59,5 @@ export default function Root() {
     </div>
   );
 }
+
+Component.displayName = 'RootRoute';
