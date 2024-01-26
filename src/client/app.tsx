@@ -9,6 +9,7 @@ import { ThemeProvider } from '~/components/theme-provider';
 import { Toaster } from '~/components/ui/toaster';
 import { Join } from '~/routes/join';
 import { TRPCProvider, isTRPCClientError, trpcClient } from '~/utils/api';
+import { Join } from '~/routes/join';
 
 const router = createBrowserRouter([
   {
