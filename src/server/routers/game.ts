@@ -81,7 +81,7 @@ export const gameRouter = createTRPCRouter({
         '$.players',
       )) as [number];
 
-      if (playerCount >= 1) {
+      if (playerCount >= 16) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message:

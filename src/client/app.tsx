@@ -8,6 +8,7 @@ import { Spinner } from '~/components/spinner';
 import { ThemeProvider } from '~/components/theme-provider';
 import { Toaster } from '~/components/ui/toaster';
 import { TRPCProvider, isTRPCClientError, trpcClient } from '~/utils/api';
+import { Join } from '~/routes/join';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
   {
     path: '/join/:gameId',
     errorElement: <ErrorBoundary />,
-    lazy: () => import('~/routes/join'),
+    element: <Join />,
   },
   {
     path: '/game/:gameId',
