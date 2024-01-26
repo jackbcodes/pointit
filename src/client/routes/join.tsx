@@ -22,7 +22,7 @@ import { useToast } from '~/components/ui/use-toast';
 import { api } from '~/utils/api';
 import { cn } from '~/utils/misc';
 
-export function Component() {
+export function Join() {
   const { gameId } = useParams();
   const navigate = useNavigate();
 
@@ -163,8 +163,6 @@ function JoinGameForm({ playerName, isSpectator }: JoinGameFormProps) {
     </Form>
   );
 }
-
-Component.displayName = 'JoinRoute';
 
 interface PlayerModeRadioGroupItemProps {
   value: string;

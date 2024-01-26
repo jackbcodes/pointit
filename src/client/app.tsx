@@ -7,6 +7,7 @@ import { ErrorBoundary } from '~/components/error-boundary';
 import { Spinner } from '~/components/spinner';
 import { ThemeProvider } from '~/components/theme-provider';
 import { Toaster } from '~/components/ui/toaster';
+import { Join } from '~/routes/join';
 import { TRPCProvider, isTRPCClientError, trpcClient } from '~/utils/api';
 
 const router = createBrowserRouter([
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
   {
     path: '/join/:gameId',
     errorElement: <ErrorBoundary />,
-    lazy: () => import('~/routes/join'),
+    element: <Join />,
   },
   {
     path: '/game/:gameId',
