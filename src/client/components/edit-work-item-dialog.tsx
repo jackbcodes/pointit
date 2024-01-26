@@ -33,11 +33,7 @@ const formSchema = z.object({
       required_error: 'Please enter the title',
     }),
   ),
-  description: emptyStringToUndefined.pipe(
-    z.string({
-      required_error: 'Please enter a description',
-    }),
-  ),
+  description: emptyStringToUndefined.pipe(z.string().optional()),
   url: emptyStringToUndefined.pipe(
     z.string().url('Please enter a valid URL').optional(),
   ),

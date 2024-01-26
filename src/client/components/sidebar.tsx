@@ -110,7 +110,12 @@ export function Sidebar() {
                     <span className="sr-only">Open work item</span>
                   </a>
                 </div>
-                <div className="space-y-1">
+                <div
+                  className={cn(
+                    'space-y-1 hidden',
+                    game.workItem?.description && 'block',
+                  )}
+                >
                   <p className="text-sm font-bold">Description</p>
                   <p className="text-sm">{game.workItem?.description}</p>
                 </div>

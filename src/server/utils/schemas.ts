@@ -30,7 +30,7 @@ export type VotingSystem = z.infer<typeof votingSystemSchema>;
 
 export const workItemSchema = z.object({
   title: z.string(),
-  description: z.string(),
+  description: emptyStringToUndefined.pipe(z.string().optional()),
   url: emptyStringToUndefined.pipe(z.string().url().optional()),
 });
 
