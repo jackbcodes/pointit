@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { ColorModeToggle } from '~/components/color-mode-toggle';
 import { GitHubLink } from '~/components/github-link';
+import { IdlePromptDialog } from '~/components/idle-prompt-dialog';
 import { Results } from '~/components/results';
 import { RevealButton } from '~/components/reveal-button';
 import { Sidebar } from '~/components/sidebar';
@@ -33,6 +34,7 @@ export function Component() {
 
     return (
       <div className="bg-background-game">
+        <IdlePromptDialog />
         <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background px-4 py-2.5 lg:hidden">
           <div className="flex items-center justify-between">
             <Sheet>

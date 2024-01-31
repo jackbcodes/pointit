@@ -1,13 +1,4 @@
-import isEmpty from 'lodash.isempty';
 import { z } from 'zod';
-
-// Redis transformations
-
-// TODO: Is this needed now? Probs not
-const emptyStringToUndefined = z.preprocess(
-  (value) => (value === '' ? undefined : value),
-  z.string().optional(),
-);
 
 // JWT
 
@@ -30,8 +21,8 @@ export type VotingSystem = z.infer<typeof votingSystemSchema>;
 
 export const workItemSchema = z.object({
   title: z.string(),
-  description: emptyStringToUndefined.pipe(z.string().optional()),
-  url: emptyStringToUndefined.pipe(z.string().url().optional()),
+  description: z.string().optional(),
+  url: z.string().url().optional(),
 });
 
 export type WorkItem = z.infer<typeof workItemSchema>;
@@ -65,28 +56,10 @@ export const gameSchema = z.object({
   isRevealed: z.boolean(),
   players: z.array(playerSchema),
   votingSystem: votingSystemSchema,
-  workItem: z.preprocess(
-    (value) => (isEmpty(value) ? undefined : value),
-    workItemSchema.optional(),
-  ),
+  workItem: workItemSchema.optional(),
 });
 
 export type Game = z.infer<typeof gameSchema>;
-
-// Full Game
-
-export const fullGameSchema = gameSchema.merge(
-  z.object({
-    players: z.array(playerSchema),
-    votingSystem: votingSystemSchema,
-    workItem: z.preprocess(
-      (value) => (isEmpty(value) ? undefined : value),
-      workItemSchema.optional(),
-    ),
-  }),
-);
-
-export type FullGame = z.infer<typeof fullGameSchema>;
 
 // Create game
 
@@ -95,8 +68,6 @@ export const createGameSchema = z.object({
   votingSystem: votingSystemSchema,
 });
 
-export type CreateGame = z.infer<typeof createGameSchema>;
-
 // Join game
 
 export const joinGameSchema = z.object({
@@ -104,5 +75,3 @@ export const joinGameSchema = z.object({
   playerName: z.string(),
   isSpectator: z.boolean(),
 });
-
-export type JoinGameBody = z.infer<typeof joinGameSchema>;
