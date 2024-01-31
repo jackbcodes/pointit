@@ -29,7 +29,7 @@ npm run dev
 
 [Fly.io](https://fly.io/) with Docker is the recommended way to deploy your app. It has a native integration with [Upstash](https://fly.io/docs/reference/redis/), offering a free Redis database with reasonable usage limits.
 
-This repo comes with a [GitHub Actions workflow](./.github/workflows/deploy.yml) that automatically deploys your app to production and staging environments. To get this working, you need to set up Fly:
+This repo comes with a [GitHub Actions workflow](./.github/workflows/deploy.yml) that automatically deploys your app. To get this working, you need to set up Fly:
 
 1. Install [flyctl](https://fly.io/docs/hands-on/install-flyctl/)
 2. Sign up and log in
@@ -38,11 +38,10 @@ This repo comes with a [GitHub Actions workflow](./.github/workflows/deploy.yml)
    flyctl auth signup
    ```
 
-3. Create an app (optionally create a staging app)
+3. Create an app
 
    ```sh
    flyctl apps create pointit
-   flyctl apps create pointit-staging
    ```
 
 4. Create a Redis database
@@ -78,7 +77,6 @@ This repo comes with a [GitHub Actions workflow](./.github/workflows/deploy.yml)
 
      ```sh
      flyctl secrets set AUTH_SECRET=$(openssl rand -hex 32) --app pointit
-     flyctl secrets set AUTH_SECRET=$(openssl rand -hex 32) --app pointit-staging
      ```
 
      > ≈ If you don't have openssl installed, you can also use [1Password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret
@@ -87,14 +85,13 @@ This repo comes with a [GitHub Actions workflow](./.github/workflows/deploy.yml)
 
      ```sh
      flyctl secrets set REDIS_URL=<url>/?family=6 --app pointit
-     flyctl secrets set REDIS_URL=<url>/?family=6 --app pointit-staging
      ```
 
      > ❗️ **Note:** You must append "/?family=6" to the URL to force IPv6 resolution. Otherwise, you will not be able to connect
 
 7. Commit!
 
-   Now that everything is set up you can commit and push your changes to your repo. Every commit to your main branch will trigger a deployment to your production environment, and every commit to your dev branch will trigger a deployment to your staging environment.
+   Now that everything is set up you can commit and push your changes to your repo. Every commit to your main branch will trigger a deployment to your production environment.
 
 ### Deploying locally
 
