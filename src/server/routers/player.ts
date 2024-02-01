@@ -21,7 +21,7 @@ export const playerRouter = createTRPCRouter({
           JSON.stringify({ player: { id: ctx.user.id, vote: input } }),
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
     }),
@@ -36,6 +36,12 @@ export const playerRouter = createTRPCRouter({
           paths.player(ctx.user.id, 'isSpectator'),
         )
         .call('JSON.TOGGLE', keys.user(ctx.user.id), `$.isSpectator`)
+        .call(
+          'JSON.SET',
+          keys.game(ctx.user.gameId),
+          paths.player(ctx.user.id, 'vote'),
+          `""`,
+        )
         .exec();
 
       if (!response) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
@@ -49,7 +55,7 @@ export const playerRouter = createTRPCRouter({
         JSON.stringify({ player: { id: ctx.user.id, isSpectator } }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
   }),
@@ -74,7 +80,7 @@ export const playerRouter = createTRPCRouter({
           JSON.stringify({ player: { id: ctx.user.id, name: input } }),
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
     }),
@@ -92,7 +98,7 @@ export const playerRouter = createTRPCRouter({
         JSON.stringify({ isLeaveGame: true, id: ctx.user.id }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
   }),

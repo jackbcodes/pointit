@@ -56,7 +56,7 @@ export const gameRouter = createTRPCRouter({
           .expire(keys.user(user.id), USER_EXPIRATION_TIME)
           .exec();
       } catch (error) {
-        console.log(error);
+        console.error(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
 
@@ -120,7 +120,7 @@ export const gameRouter = createTRPCRouter({
           JSON.stringify({ player }),
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
 
@@ -161,7 +161,7 @@ export const gameRouter = createTRPCRouter({
         JSON.stringify({ isRevealed }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
   }),

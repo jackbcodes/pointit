@@ -16,7 +16,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(morgan('tiny', { skip: (req) => !req.url.startsWith('/api') }));
+app.use(morgan('tiny', { skip: (req) => !req.originalUrl.startsWith('/api') }));
 
 app.use(
   '/api',

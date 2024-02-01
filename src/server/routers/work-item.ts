@@ -21,7 +21,7 @@ export const workItemRouter = createTRPCRouter({
           JSON.stringify({ workItem: input }),
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       }
     }),
@@ -35,7 +35,7 @@ export const workItemRouter = createTRPCRouter({
         JSON.stringify({ workItem: {} }),
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
   }),
