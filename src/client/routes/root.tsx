@@ -16,7 +16,7 @@ export function Component() {
         <div className="container flex flex-col gap-8 lg:flex-row">
           <div className="pt-4 lg:pt-10">
             <span className="me-2 rounded bg-green-100 px-2.5 py-1.5 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
-              Built by developers for developers
+              Open-source and completely free to use
             </span>
             <h1 className="mb-4 mt-7 max-w-2xl text-3xl font-bold leading-none md:text-5xl xl:text-6xl">
               Who says you can&apos;t play card games at work?
