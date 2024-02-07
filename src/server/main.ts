@@ -16,10 +16,10 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(morgan('tiny', { skip: (req) => !req.originalUrl.startsWith('/api') }));
 
 app.use(
   '/api',
+  morgan('tiny'),
   subscribeRouter,
   createExpressMiddleware({
     router: appRouter,
