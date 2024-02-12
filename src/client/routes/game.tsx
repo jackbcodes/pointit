@@ -40,7 +40,7 @@ export function Component() {
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <PanelLeftOpen className="h-5 w-5" />
+                  <PanelLeftOpen className="size-5" />
                   <span className="sr-only">Open sidebar</span>
                 </Button>
               </SheetTrigger>

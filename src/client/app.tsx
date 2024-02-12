@@ -38,7 +38,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       retry: (failureCount, error) =>
         isTRPCClientError(error) ? false : failureCount === 3,
-      useErrorBoundary: true,
+      throwOnError: true,
     },
   },
 });

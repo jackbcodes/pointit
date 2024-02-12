@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRPCClientError } from '@trpc/client';
 import { ArrowRight, Eye, Loader2, LucideIcon, Vote } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -31,7 +30,7 @@ export function Join() {
 
   const isUserInGame = Boolean(gameId === userQuery.data?.gameId);
 
-  if (gameQuery.isLoading || userQuery.isLoading) return <Spinner />;
+  if (gameQuery.isPending || userQuery.isPending) return <Spinner />;
 
   if (isUserInGame) navigate(`/game/${gameId}`, { replace: true });
 
@@ -92,11 +91,9 @@ function JoinGameForm({ playerName, isSpectator }: JoinGameFormProps) {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description:
-          error instanceof TRPCClientError
-            ? error.message
-            : 'There was an error joining the game, please try again',
+        description: 'There was an error joining the game, please try again',
       });
+      console.error(error);
     }
   }
 
@@ -157,7 +154,7 @@ function JoinGameForm({ playerName, isSpectator }: JoinGameFormProps) {
             )}
           />
           Let&apos;s go
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <ArrowRight className="ml-2 size-4" />
         </Button>
       </form>
     </Form>
@@ -184,7 +181,7 @@ function PlayerModeRadioGroupItem({
           <RadioGroupItem value={value} className="sr-only" />
         </FormControl>
         <div className="flex items-start space-x-4 rounded-md border border-input bg-background p-4 transition-all hover:cursor-pointer hover:text-accent-foreground">
-          <Icon className="h-5 w-5" />
+          <Icon className="size-5" />
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">{name}</p>
             <p className="text-sm text-muted-foreground">{values}</p>

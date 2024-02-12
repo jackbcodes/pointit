@@ -2,9 +2,9 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { keys, redis, paths } from '~/utils/redis';
-import { createTRPCRouter, protectedProcedure } from '~/utils/trpc';
+import { router, protectedProcedure } from '~/utils/trpc';
 
-export const playerRouter = createTRPCRouter({
+export const playerRouter = router({
   vote: protectedProcedure
     .input(z.string().optional())
     .mutation(async ({ ctx, input }) => {

@@ -2,9 +2,9 @@ import { TRPCError } from '@trpc/server';
 
 import { keys, redis } from '~/utils/redis';
 import { workItemSchema } from '~/utils/schemas';
-import { createTRPCRouter, protectedProcedure } from '~/utils/trpc';
+import { router, protectedProcedure } from '~/utils/trpc';
 
-export const workItemRouter = createTRPCRouter({
+export const workItemRouter = router({
   add: protectedProcedure
     .input(workItemSchema)
     .mutation(async ({ ctx, input }) => {

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRPCClientError } from '@trpc/client';
 import { Loader2, Pencil } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -24,6 +23,7 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { useToast } from '~/components/ui/use-toast';
 import { api } from '~/utils/api';
 import { cn, emptyStringToUndefined } from '~/utils/misc';
 
@@ -43,6 +43,7 @@ interface ChangeNameDialogProps {
 
 export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
 
   const changeName = api.player.changeName.useMutation();
 
@@ -58,12 +59,12 @@ export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
       await changeName.mutateAsync(formData.playerName);
       setIsOpen(false);
     } catch (error) {
-      form.setError('root.serverError', {
-        message:
-          error instanceof TRPCClientError
-            ? error.message
-            : 'There was an error joining the game, please try again',
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was an error changing your name, please try again',
       });
+      console.error(error);
     }
   }
 
@@ -71,7 +72,7 @@ export function ChangeNameDialog({ playerName }: ChangeNameDialogProps) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" className="w-full justify-start">
-          <Pencil className="mr-2 h-4 w-4" />
+          <Pencil className="mr-2 size-4" />
           Change name
         </Button>
       </DialogTrigger>

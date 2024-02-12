@@ -57,7 +57,7 @@ export function Sidebar() {
               if (player.vote) await vote.mutateAsync();
             }}
           >
-            <Eye className="mr-2 h-4 w-4" />
+            <Eye className="mr-2 size-4" />
             Spectator mode
           </Toggle>
           <LeaveGameAlertDialog className="lg:hidden" />
@@ -136,7 +136,7 @@ export function Sidebar() {
                 className="flex animate-in slide-in-from-left"
                 key={spectator.id}
               >
-                <User className="mr-2 h-4 w-4 flex-none" />
+                <User className="mr-2 size-4 flex-none" />
                 <p className="truncate text-sm">{spectator.name}</p>
               </div>
             ))}
@@ -170,7 +170,7 @@ function LeaveGameAlertDialog(props: ButtonProps) {
             props.className,
           )}
         >
-          <LogOut className="mr-2 h-4 w-4 lg:mr-2" />
+          <LogOut className="mr-2 size-4 lg:mr-2" />
           <p>Leave game</p>
         </Button>
       </AlertDialogTrigger>

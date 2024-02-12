@@ -2,14 +2,13 @@ import { TRPCClientError, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import superjson from 'superjson';
 
-import type { AppRouter } from '../../server/routers';
+import type { AppRouter } from '../../server/routers/_app';
 
 const trpc = createTRPCReact<AppRouter>();
 
 export const TRPCProvider = trpc.Provider;
 
 export const trpcClient = trpc.createClient({
-  transformer: superjson,
   links: [
     httpBatchLink({
       url: '/api',
@@ -19,6 +18,7 @@ export const trpcClient = trpc.createClient({
           credentials: 'include',
         });
       },
+      transformer: superjson,
     }),
   ],
 });

@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRPCClientError } from '@trpc/client';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -79,11 +78,9 @@ export function StartGameDialog({
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description:
-          error instanceof TRPCClientError
-            ? error.message
-            : 'There was an error starting the game, please try again',
+        description: 'There was an error starting the game, please try again',
       });
+      console.error(error);
     }
   }
 
@@ -97,7 +94,7 @@ export function StartGameDialog({
               isLoading && 'block',
             )}
           />
-          Start game <ArrowRight className="ml-2 h-4 w-4" />
+          Start game <ArrowRight className="ml-2 size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
