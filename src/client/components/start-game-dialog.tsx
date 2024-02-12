@@ -94,7 +94,7 @@ export function StartGameDialog({
               isLoading && 'block',
             )}
           />
-          Start game <ArrowRight className="ml-2 h-4 w-4" />
+          Start game <ArrowRight className="ml-2 size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

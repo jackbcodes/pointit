@@ -44,7 +44,7 @@ export function ErrorBoundary() {
               'mt-4',
             )}
           >
-            <Home className="mr-2 h-4 w-4" /> Back to Home
+            <Home className="mr-2 size-4" /> Back to Home
           </a>
         </div>
       </div>

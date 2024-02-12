@@ -12,7 +12,7 @@ export function GitHubLink() {
         size: 'icon',
       })}
     >
-      <Icons.gitHub className="h-5 w-5" />
+      <Icons.gitHub className="size-5" />
       <span className="sr-only">GitHub</span>
     </a>
   );

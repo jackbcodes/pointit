@@ -85,7 +85,7 @@ export function EditWorkItemDialog({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-6 w-6">
+        <Button variant="ghost" size="icon" className="size-6">
           {title ? <Edit2 className="h-3" /> : <Plus className="h-3" />}
           <span className="sr-only">{title ? 'Edit' : 'Add'} work item</span>
         </Button>

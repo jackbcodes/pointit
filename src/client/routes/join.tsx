@@ -154,7 +154,7 @@ function JoinGameForm({ playerName, isSpectator }: JoinGameFormProps) {
             )}
           />
           Let&apos;s go
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <ArrowRight className="ml-2 size-4" />
         </Button>
       </form>
     </Form>
@@ -181,7 +181,7 @@ function PlayerModeRadioGroupItem({
           <RadioGroupItem value={value} className="sr-only" />
         </FormControl>
         <div className="flex items-start space-x-4 rounded-md border border-input bg-background p-4 transition-all hover:cursor-pointer hover:text-accent-foreground">
-          <Icon className="h-5 w-5" />
+          <Icon className="size-5" />
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">{name}</p>
             <p className="text-sm text-muted-foreground">{values}</p>
