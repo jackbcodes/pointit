@@ -27,7 +27,7 @@ export function Component() {
             </p>
             <StartGameDialog
               playerName={userQuery.data?.name}
-              isLoading={userQuery.isLoading}
+              isLoading={userQuery.isPending}
             />
           </div>
           <img

@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRPCClientError } from '@trpc/client';
 import { ArrowRight, Eye, Loader2, LucideIcon, Vote } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -31,7 +30,7 @@ export function Join() {
 
   const isUserInGame = Boolean(gameId === userQuery.data?.gameId);
 
-  if (gameQuery.isLoading || userQuery.isLoading) return <Spinner />;
+  if (gameQuery.isPending || userQuery.isPending) return <Spinner />;
 
   if (isUserInGame) navigate(`/game/${gameId}`, { replace: true });
 
@@ -92,11 +91,9 @@ function JoinGameForm({ playerName, isSpectator }: JoinGameFormProps) {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description:
-          error instanceof TRPCClientError
-            ? error.message
-            : 'There was an error joining the game, please try again',
+        description: 'There was an error joining the game, please try again',
       });
+      console.error(error);
     }
   }
 

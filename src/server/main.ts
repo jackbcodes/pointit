@@ -7,7 +7,7 @@ import express from 'express';
 import morgan from 'morgan';
 import ViteExpress from 'vite-express';
 
-import { appRouter, subscribeRouter } from '~/routers';
+import { appRouter, subscribeRouter } from '~/routers/_app';
 import { createContext } from '~/utils/trpc';
 
 const PORT = process.env.PORT ?? '3000';

@@ -17,7 +17,9 @@ export const createContext = async ({
   return { req, res, user };
 };
 
-const t = initTRPC.context<typeof createContext>().create({
+type Context = Awaited<ReturnType<typeof createContext>>;
+
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
@@ -31,8 +33,7 @@ const t = initTRPC.context<typeof createContext>().create({
   },
 });
 
-export const createTRPCRouter = t.router;
-
+export const router = t.router;
 export const publicProcedure = t.procedure;
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {

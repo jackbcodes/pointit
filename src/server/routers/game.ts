@@ -13,13 +13,9 @@ import {
   createGameSchema,
   joinGameSchema,
 } from '~/utils/schemas';
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from '~/utils/trpc';
+import { router, protectedProcedure, publicProcedure } from '~/utils/trpc';
 
-export const gameRouter = createTRPCRouter({
+export const gameRouter = router({
   create: publicProcedure
     .input(createGameSchema)
     .mutation(async ({ ctx, input }) => {
