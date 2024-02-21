@@ -17,6 +17,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.get('/.well-known/microsoft-identity-association.json', (req, res) => {
+  res.json({
+    associatedApplications: [
+      {
+        applicationId: '23921514-3a50-432a-a2d5-accbfe67f61d',
+      },
+    ],
+  });
+});
+
 app.use(
   '/api',
   morgan('tiny'),
