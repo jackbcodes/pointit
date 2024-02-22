@@ -47,21 +47,29 @@ https://github.com/jackbcodes/pointit/fork
 
 ### Clone on your local machine
 
-```bash
+```sh
 git clone https://github.com/your-username/pointit.git
 ```
 
-### Create a new Branch
+### Create a new branch
 
-```bash
+```sh
 git checkout -b my-new-branch
 ```
 
 ### Install dependencies
 
-```bash
+```sh
 npm install
 ```
+
+### Create .env file
+
+```sh
+cp .env.example .env
+```
+
+You can remove the comments at the top of the new file.
 
 ### Start dev server
 
@@ -87,13 +95,13 @@ The commit must be one of the following types:
 
 If you are unfamiliar with the usage of conventional commits, the short version is to simply specify the type as the first word, and follow it with a colon and a space, then start your message from a lowercase letter, like this:
 
-```bash
+```sh
 feat: add a new voting values option
 ```
 
 You can also specify the scope of the commit in the parentheses after a type:
 
-```bash
+```sh
 fix(client): order players by when they joined
 ```
 
@@ -101,11 +109,11 @@ fix(client): order players by when they joined
 
 E2E tests are written using [Playwright](https://playwright.dev/). To run the tests:
 
-```bash
+```sh
 npx playwright install
 ```
 
-```bash
+```sh
 npm run test:e2e
 ```
 
