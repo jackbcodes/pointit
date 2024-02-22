@@ -24,8 +24,6 @@ This repository is a single application containing both the server and client.
 
 ## Development
 
-To run the app locally you need to run Redis on your machine. This guide will demonstrate how to do so using Docker, but there are a [number of ways](https://redis.io/docs/install/) to do it.
-
 ### System requirements
 
 - Node.js >= 20.0.0
@@ -33,6 +31,8 @@ To run the app locally you need to run Redis on your machine. This guide will de
 - git >= 2.38.0
 
 ### Run Redis on Docker
+
+To run the app locally you need to run Redis on your machine. This guide will demonstrate how to do so using Docker, but there are a [number of ways](https://redis.io/docs/install/) to do it.
 
 1. Download [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 2. Start Redis Stack container:
