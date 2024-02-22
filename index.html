@@ -57,9 +57,14 @@
           }),
           (e.__SV = 1));
       })(document, window.posthog || []);
-      posthog.init('phc_eM5F6Jc7R50u7d0WWkWfjPaeNsoCoA3R7ggMnu2xIrV', {
-        api_host: 'https://app.posthog.com',
-      });
+      if (
+        !window.location.host.includes('127.0.0.1') &&
+        !window.location.host.includes('localhost')
+      ) {
+        posthog.init('phc_eM5F6Jc7R50u7d0WWkWfjPaeNsoCoA3R7ggMnu2xIrV', {
+          api_host: 'https://app.posthog.com',
+        });
+      }
     </script>
   </head>
   <body
