@@ -27,7 +27,6 @@ This repository is a single application containing both the server and client.
 ### System requirements
 
 - Node.js >= 20.0.0
-- npm >= 8.18.0
 - git >= 2.38.0
 
 ### Run Redis on Docker
@@ -66,7 +65,7 @@ git checkout -b my-new-branch
 ### Install dependencies
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### Create .env file
@@ -80,7 +79,7 @@ You can remove the comments at the top of the new file.
 ### Start dev server
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
 http://localhost:3000/
@@ -122,7 +121,7 @@ npx playwright install
 ```
 
 ```sh
-npm run test:e2e
+pnpm test:e2e
 ```
 
 Please ensure that the tests are passing when submitting a pull request. If you're adding new features, please include tests.
