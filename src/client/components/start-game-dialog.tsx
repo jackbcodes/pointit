@@ -30,13 +30,30 @@ import { cn } from '~/utils/misc';
 const DEFAULT_VOTING_SYSTEMS = {
   fibonacci: ['0', '1', '2', '3', '5', '8', '13', '21', '?', '☕️'],
   't-shirt': ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '?', '☕️'],
+  'fibonacci-plus': [
+    '0',
+    '1',
+    '2',
+    '3',
+    '5',
+    '8',
+    '13',
+    '21',
+    '34',
+    '55',
+    '89',
+    '144',
+    '233',
+    '?',
+    '☕️',
+  ],
 };
 
 const formSchema = z.object({
   playerName: z.string({
     required_error: 'Please enter your name',
   }),
-  votingSystemName: z.enum(['fibonacci', 't-shirt']),
+  votingSystemName: z.enum(['fibonacci', 't-shirt', 'fibonacci-plus']),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -131,12 +148,19 @@ export function StartGameDialog({
                     <VotingSystemRadioGroupItem
                       value="fibonacci"
                       name="Fibonacci"
-                      values="0, 1, 2, 3, 5, 8, 13, 21, ?, ☕️"
+                      values={DEFAULT_VOTING_SYSTEMS.fibonacci.join(', ')}
+                    />
+                    <VotingSystemRadioGroupItem
+                      value="fibonacci-plus"
+                      name="Fibonacci +"
+                      values={DEFAULT_VOTING_SYSTEMS['fibonacci-plus'].join(
+                        ', ',
+                      )}
                     />
                     <VotingSystemRadioGroupItem
                       value="t-shirt"
                       name="T-shirt"
-                      values="XXS, XS, S, M, L, XL, XXL, ?, ☕️"
+                      values={DEFAULT_VOTING_SYSTEMS['t-shirt'].join(', ')}
                     />
                   </RadioGroup>
                 </FormItem>

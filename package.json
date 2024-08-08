@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "start": "NODE_ENV=production tsx --tsconfig ./tsconfig.node.json src/server/main.ts",
     "test:e2e": "playwright test --ui",
     "typecheck": "tsc"
@@ -88,6 +88,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.1.1"
   },
+  "packageManager": "pnpm@9.7.0",
   "engines": {
     "node": "20"
   }
