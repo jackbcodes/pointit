@@ -87,6 +87,5 @@ export function useEventSource() {
       evtSource.removeEventListener('message', handleMessage);
       evtSource.close();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlayerInGame]);
 }

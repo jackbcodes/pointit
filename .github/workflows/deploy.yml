@@ -23,19 +23,20 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: 🛠️ Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: 🔬 ESLint
-        run: npm run lint
+        run: pnpm install
 
       - name: 💄 Prettier
-        run: npm run format:check
+        run: pnpm format:check
 
   playwright:
     name: 🎭 Playwright
@@ -57,19 +58,23 @@ jobs:
       - name: 🏄 Copy test env vars
         run: cp .env.example .env
 
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: 🛠️ Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        run: pnpm install
 
       - name: 📥 Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
       - name: 🏗 Build
-        run: npm run build
+        run: pnpm build
 
       - name: 🎭 Playwright tests
         run: npx playwright test
