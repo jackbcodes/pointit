@@ -15,7 +15,6 @@ interface ThemeProviderState {
 
 const initialState: ThemeProviderState = {
   theme: 'light',
-  // eslint-disable-next-line unicorn/no-null
   setTheme: () => null,
 };
 
