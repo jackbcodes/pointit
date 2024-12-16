@@ -40,7 +40,7 @@ jobs:
   playwright:
     name: 🎭 Playwright
     runs-on: ubuntu-latest
-    container: node:20-bookworm-slim
+    container: node:22-bookworm-slim
     services:
       redis:
         image: redis/redis-stack-server:latest
